@@ -1,0 +1,2369 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BURGA RUA - Smash burgers artesanais com carne 100% Angus, ingredientes selecionados e entrega rápida e quente na sua porta.">
+  <title>BURGA RUA | Smash Burgers Artesanais & Delivery Premium</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. VARIÁVEIS DE SISTEMA & RESET
+       ========================================================================== */
+    :root {
+      --cor-carvao: #141211;
+      --cor-carvao-card: #1c1917;
+      --cor-carvao-borda: #2a2624;
+      --cor-offwhite: #FAF7F2;
+      --cor-superficie: #FFFFFF;
+      --cor-texto-escuro: #1A1817;
+      --cor-texto-mutado: #736F6A;
+      --cor-texto-claro: #F5F3EF;
+      --cor-texto-claro-mutado: #A8A29D;
+      
+      --cor-destaque: #E63A27;        /* Vermelho Tomate */
+      --cor-destaque-hover: #CC301F;
+      --cor-ambar: #F5A623;           /* Ouro / Avaliações / Preços */
+      --cor-ambar-suave: rgba(245, 166, 35, 0.12);
+
+      --fonte-titulo: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --fonte-corpo: 'Inter', system-ui, -apple-system, sans-serif;
+
+      --raio-sm: 8px;
+      --raio-md: 14px;
+      --raio-lg: 20px;
+      --raio-pilula: 9999px;
+
+      --sombra-card: 0 10px 30px -5px rgba(20, 18, 17, 0.06), 0 4px 12px -2px rgba(20, 18, 17, 0.04);
+      --sombra-elevada: 0 20px 40px -10px rgba(20, 18, 17, 0.12);
+      --sombra-glow: 0 0 50px rgba(230, 58, 39, 0.25);
+
+      --transicao: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--cor-offwhite);
+      color: var(--cor-texto-escuro);
+      font-family: var(--fonte-corpo);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    button, input {
+      font: inherit;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Utilitários Visuais */
+    .badge-rotulo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(230, 58, 39, 0.1);
+      color: var(--cor-destaque);
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: var(--raio-pilula);
+    }
+
+    .badge-rotulo--escuro {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--cor-ambar);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--raio-md);
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: var(--transicao);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--cor-destaque);
+      outline-offset: 3px;
+    }
+
+    .btn--primario {
+      background: var(--cor-destaque);
+      color: #FFFFFF;
+      box-shadow: 0 8px 20px -4px rgba(230, 58, 39, 0.4);
+    }
+
+    .btn--primario:hover {
+      background: var(--cor-destaque-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -4px rgba(230, 58, 39, 0.5);
+    }
+
+    .btn--secundario {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--cor-texto-claro);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn--secundario:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .btn--secundario-claro {
+      background: var(--cor-superficie);
+      color: var(--cor-texto-escuro);
+      border: 1px solid #E5E0D8;
+    }
+
+    .btn--secundario-claro:hover {
+      background: #F2ECE1;
+      transform: translateY(-2px);
+    }
+
+    /* Animações sutis via IntersectionObserver */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fade-up.visivel {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       2. BARRA SUPERIOR DISCRETA
+       ========================================================================== */
+    .topbar {
+      background: #0e0d0c;
+      color: var(--cor-texto-claro-mutado);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .topbar__conteudo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .topbar__destaque {
+      color: var(--cor-ambar);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       3. HEADER TRANSLÚCIDO
+       ========================================================================== */
+    .header-site {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(20, 18, 17, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .header-site.scrolled {
+      background: rgba(20, 18, 17, 0.95);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .header-site__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+    }
+
+    .logo-marca {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--cor-texto-claro);
+    }
+
+    .logo-marca__icone {
+      width: 38px;
+      height: 38px;
+      background: var(--cor-destaque);
+      border-radius: var(--raio-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+    }
+
+    .logo-marca__nome {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-desktop a {
+      text-decoration: none;
+      color: var(--cor-texto-claro-mutado);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-desktop a:hover {
+      color: var(--cor-texto-claro);
+    }
+
+    .header-acoes {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-carrinho-header {
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--raio-md);
+      padding: 10px 16px;
+      color: var(--cor-texto-claro);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transicao);
+    }
+
+    .btn-carrinho-header:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .carrinho-badge {
+      background: var(--cor-destaque);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: var(--raio-pilula);
+      padding: 2px 7px;
+      min-width: 20px;
+      text-align: center;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .carrinho-badge.pop {
+      transform: scale(1.3);
+    }
+
+    .btn-menu-mobile {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .btn-menu-mobile span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--cor-texto-claro);
+      border-radius: 2px;
+      transition: 0.2s ease;
+    }
+
+    .drawer-nav-mobile {
+      display: none;
+      position: fixed;
+      top: 76px;
+      left: 0;
+      width: 100%;
+      background: var(--cor-carvao);
+      border-bottom: 1px solid var(--cor-carvao-borda);
+      padding: 24px;
+      z-index: 99;
+    }
+
+    .drawer-nav-mobile.aberto {
+      display: block;
+    }
+
+    .drawer-nav-mobile ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .drawer-nav-mobile a {
+      color: var(--cor-texto-claro);
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION
+       ========================================================================== */
+    .secao-hero {
+      background: var(--cor-carvao);
+      color: var(--cor-texto-claro);
+      padding: 60px 0 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Brilho de ambientação sutil */
+    .secao-hero::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      right: 5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(230, 58, 39, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-conteudo {
+      max-width: 580px;
+    }
+
+    .hero-conteudo h1 {
+      font-family: var(--fonte-titulo);
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 18px 0;
+    }
+
+    .hero-conteudo p {
+      font-size: 1.15rem;
+      color: var(--cor-texto-claro-mutado);
+      margin-bottom: 32px;
+      max-width: 490px;
+    }
+
+    .hero-acoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .hero-cep {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--raio-md);
+      padding: 6px 6px 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 440px;
+    }
+
+    .hero-cep input {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      font-size: 0.95rem;
+      flex: 1;
+      outline: none;
+    }
+
+    .hero-cep input::placeholder {
+      color: #78716C;
+    }
+
+    .hero-imagem-box {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-imagem {
+      width: 100%;
+      max-width: 540px;
+      height: 480px;
+      object-fit: cover;
+      border-radius: var(--raio-lg);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.6s ease;
+    }
+
+    .hero-imagem:hover {
+      transform: scale(1.02);
+    }
+
+    /* Linha de Provas Sociais */
+    .provas-sociais {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      padding-top: 50px;
+      margin-top: 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .prova-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .prova-item__icone {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--raio-sm);
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cor-ambar);
+      flex-shrink: 0;
+    }
+
+    .prova-item strong {
+      display: block;
+      font-family: var(--fonte-titulo);
+      font-size: 1.1rem;
+      color: var(--cor-texto-claro);
+    }
+
+    .prova-item span {
+      font-size: 0.85rem;
+      color: var(--cor-texto-claro-mutado);
+    }
+
+    /* ==========================================================================
+       5. CATEGORIAS (FILTRO COM SCROLL HORIZONTAL)
+       ========================================================================== */
+    .secao-categorias {
+      padding: 50px 0 20px;
+    }
+
+    .categorias-trilho {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .categorias-trilho::-webkit-scrollbar {
+      display: none;
+    }
+
+    .categoria-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      background: var(--cor-superficie);
+      border: 1px solid #E6E1D8;
+      border-radius: var(--raio-pilula);
+      color: var(--cor-texto-escuro);
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: var(--sombra-card);
+      transition: var(--transicao);
+    }
+
+    .categoria-pill svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.2s ease;
+    }
+
+    .categoria-pill:hover {
+      border-color: #D4CDC0;
+      transform: translateY(-2px);
+    }
+
+    .categoria-pill.ativo {
+      background: var(--cor-carvao);
+      color: var(--cor-texto-claro);
+      border-color: var(--cor-carvao);
+      box-shadow: 0 8px 20px -4px rgba(20, 18, 17, 0.25);
+    }
+
+    .categoria-pill.ativo svg {
+      color: var(--cor-ambar);
+    }
+
+    /* ==========================================================================
+       6. GRID DE PRODUTOS / MAIS PEDIDOS
+       ========================================================================== */
+    .secao-produtos {
+      padding: 40px 0 80px;
+    }
+
+    .secao-cabecalho {
+      margin-bottom: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .secao-cabecalho h2 {
+      font-family: var(--fonte-titulo);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .secao-cabecalho p {
+      color: var(--cor-texto-mutado);
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .produtos-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .card-produto {
+      background: var(--cor-superficie);
+      border-radius: var(--raio-lg);
+      overflow: hidden;
+      box-shadow: var(--sombra-card);
+      border: 1px solid #ECE7DD;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: var(--transicao);
+    }
+
+    .card-produto:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sombra-elevada);
+      border-color: #DFD7C9;
+    }
+
+    .card-produto__media {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background: #EDE8DF;
+    }
+
+    .card-produto__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card-produto:hover .card-produto__img {
+      transform: scale(1.06);
+    }
+
+    .card-produto__badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(20, 18, 17, 0.85);
+      backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      font-family: var(--fonte-titulo);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: var(--raio-pilula);
+    }
+
+    .card-produto__conteudo {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-produto__titulo {
+      font-family: var(--fonte-titulo);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-produto__descricao {
+      font-size: 0.9rem;
+      color: var(--cor-texto-mutado);
+      margin-bottom: 20px;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex-grow: 1;
+    }
+
+    .card-produto__rodape {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid #F2ECE1;
+    }
+
+    .card-produto__preco {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: var(--cor-texto-escuro);
+    }
+
+    .card-produto__preco small {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--cor-texto-mutado);
+      margin-right: 2px;
+    }
+
+    .btn-adicionar-produto {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: #FFFFFF;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(230, 58, 39, 0.3);
+      transition: var(--transicao);
+    }
+
+    .btn-adicionar-produto:hover {
+      background: var(--cor-destaque-hover);
+      transform: scale(1.08);
+    }
+
+    .card-seletor-qty {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #F4EFE6;
+      border-radius: var(--raio-pilula);
+      padding: 4px;
+    }
+
+    .card-seletor-qty.visivel {
+      display: flex;
+    }
+
+    .btn-qty-mini {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid #E2DCD1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 700;
+      transition: var(--transicao);
+    }
+
+    .btn-qty-mini:hover {
+      background: #EDE7DC;
+    }
+
+    .qty-display-mini {
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       7. BANNER DE PROMOÇÃO
+       ========================================================================== */
+    .secao-promocao {
+      padding: 50px 0;
+    }
+
+    .card-promocao {
+      background: linear-gradient(135deg, #1A1715 0%, #25201D 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--raio-lg);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr;
+      box-shadow: var(--sombra-elevada);
+    }
+
+    .card-promocao__conteudo {
+      padding: 48px 36px;
+      color: var(--cor-texto-claro);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card-promocao__conteudo h3 {
+      font-family: var(--fonte-titulo);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 16px 0 12px;
+    }
+
+    .card-promocao__conteudo p {
+      color: var(--cor-texto-claro-mutado);
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+      max-width: 440px;
+    }
+
+    .card-promocao__media {
+      height: 340px;
+    }
+
+    .card-promocao__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ==========================================================================
+       8. DIFERENCIAIS (POR QUE PEDIR COM A GENTE)
+       ========================================================================== */
+    .secao-diferenciais {
+      padding: 80px 0;
+    }
+
+    .diferenciais-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .card-diferencial {
+      background: var(--cor-superficie);
+      padding: 32px 24px;
+      border-radius: var(--raio-lg);
+      border: 1px solid #ECE7DD;
+      box-shadow: var(--sombra-card);
+      transition: var(--transicao);
+    }
+
+    .card-diferencial:hover {
+      transform: translateY(-4px);
+      border-color: #DDD4C6;
+    }
+
+    .card-diferencial__icone {
+      width: 52px;
+      height: 52px;
+      background: var(--cor-ambar-suave);
+      color: var(--cor-ambar);
+      border-radius: var(--raio-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .card-diferencial h4 {
+      font-family: var(--fonte-titulo);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-diferencial p {
+      font-size: 0.92rem;
+      color: var(--cor-texto-mutado);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       9. COMO FUNCIONA (PASSO A PASSO)
+       ========================================================================== */
+    .secao-passos {
+      padding: 70px 0;
+      background: #F4EFE6;
+      border-top: 1px solid #ECE5D8;
+      border-bottom: 1px solid #ECE5D8;
+    }
+
+    .passos-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      margin-top: 50px;
+      position: relative;
+    }
+
+    .passo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .passo-numero {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--cor-carvao);
+      color: var(--cor-texto-claro);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .passo-texto h4 {
+      font-family: var(--fonte-titulo);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .passo-texto p {
+      color: var(--cor-texto-mutado);
+      font-size: 0.95rem;
+    }
+
+    /* ==========================================================================
+       10. AVALIAÇÕES (DEPOIMENTOS)
+       ========================================================================== */
+    .secao-avaliacoes {
+      padding: 80px 0;
+    }
+
+    .avaliacoes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .card-avaliacao {
+      background: var(--cor-superficie);
+      padding: 28px;
+      border-radius: var(--raio-lg);
+      border: 1px solid #ECE7DD;
+      box-shadow: var(--sombra-card);
+    }
+
+    .card-avaliacao__estrelas {
+      color: var(--cor-ambar);
+      display: flex;
+      gap: 3px;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+    }
+
+    .card-avaliacao p {
+      font-size: 0.95rem;
+      color: #383431;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .card-avaliacao__autor {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .autor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #E8E2D5;
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      color: var(--cor-texto-escuro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .autor-info strong {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .autor-info span {
+      font-size: 0.8rem;
+      color: var(--cor-texto-mutado);
+    }
+
+    /* ==========================================================================
+       11. CTA FINAL & FOOTER
+       ========================================================================== */
+    .secao-cta-final {
+      background: linear-gradient(rgba(20, 18, 17, 0.92), rgba(20, 18, 17, 0.92)),
+                  url('https://images.unsplash.com/photo-1550547660-d9450f859349?w=1400') center/cover no-repeat;
+      color: var(--cor-texto-claro);
+      padding: 90px 0;
+      text-align: center;
+    }
+
+    .cta-final-box {
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .cta-final-box h2 {
+      font-family: var(--fonte-titulo);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .cta-final-box p {
+      font-size: 1.15rem;
+      color: var(--cor-texto-claro-mutado);
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    .footer-site {
+      background: #0E0C0B;
+      color: var(--cor-texto-claro);
+      padding: 70px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h5 {
+      font-family: var(--fonte-titulo);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #FFFFFF;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      color: var(--cor-texto-claro-mutado);
+      text-decoration: none;
+      font-size: 0.92rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      color: #FFFFFF;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .footer-social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--raio-sm);
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      transition: var(--transicao);
+    }
+
+    .footer-social-btn:hover {
+      background: var(--cor-destaque);
+    }
+
+    .pagamentos-icones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--cor-texto-claro-mutado);
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 28px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #736F6A;
+    }
+
+    /* ==========================================================================
+       12. DRAWER DO CARRINHO & TOAST
+       ========================================================================== */
+    .carrinho-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transicao);
+    }
+
+    .carrinho-overlay.aberto {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .carrinho-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 440px;
+      height: 100%;
+      background: var(--cor-superficie);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -15px 0 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .carrinho-drawer.aberto {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 22px 24px;
+      border-bottom: 1px solid #ECE7DD;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-header h3 {
+      font-family: var(--fonte-titulo);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .btn-fechar-drawer {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--cor-texto-mutado);
+      padding: 6px;
+      border-radius: var(--raio-sm);
+    }
+
+    .btn-fechar-drawer:hover {
+      color: var(--cor-texto-escuro);
+      background: #F4EFE6;
+    }
+
+    /* Barra de Frete Grátis */
+    .frete-barra-wrapper {
+      padding: 16px 24px;
+      background: #F7F4EE;
+      border-bottom: 1px solid #ECE7DD;
+    }
+
+    .frete-barra-texto {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .frete-progresso {
+      height: 6px;
+      background: #E5DFC8;
+      border-radius: var(--raio-pilula);
+      overflow: hidden;
+    }
+
+    .frete-progresso__fill {
+      height: 100%;
+      width: 0%;
+      background: var(--cor-destaque);
+      border-radius: var(--raio-pilula);
+      transition: width 0.3s ease;
+    }
+
+    .drawer-lista {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .item-carrinho {
+      display: flex;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #F0EBE2;
+    }
+
+    .item-carrinho__info {
+      flex: 1;
+    }
+
+    .item-carrinho__info h5 {
+      font-family: var(--fonte-titulo);
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .item-carrinho__info span {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--cor-destaque);
+    }
+
+    .item-carrinho__controles {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .drawer-footer {
+      padding: 24px;
+      border-top: 1px solid #ECE7DD;
+      background: #FFFFFF;
+    }
+
+    .drawer-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 1.4rem;
+    }
+
+    /* Barra Fixa Mobile de Carrinho */
+    .mobile-cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #FFFFFF;
+      padding: 12px 20px;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+      border-top: 1px solid #EFEAE0;
+      z-index: 95;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    @media (min-width: 768px) {
+      .mobile-cart-bar {
+        display: none;
+      }
+    }
+
+    /* Toast Discreto */
+    .toast-msg {
+      position: fixed;
+      bottom: 84px;
+      right: 24px;
+      background: var(--cor-carvao);
+      color: #FFFFFF;
+      padding: 14px 20px;
+      border-radius: var(--raio-md);
+      box-shadow: var(--sombra-elevada);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: var(--transicao);
+      pointer-events: none;
+    }
+
+    .toast-msg.visivel {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       13. RESPONSIVIDADE E BREAKPOINTS (480, 768, 1100px)
+       ========================================================================== */
+    @media (min-width: 480px) {
+      .produtos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+
+    @media (min-width: 768px) {
+      .nav-desktop {
+        display: flex;
+      }
+      .btn-menu-mobile {
+        display: none;
+      }
+      .hero-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+      .card-promocao {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+      .passos-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+      }
+      .toast-msg {
+        bottom: 24px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .produtos-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. BARRA SUPERIOR DISCRETA
+       ======================================================================== -->
+  <div class="topbar">
+    <div class="container topbar__conteudo">
+      <span>Entrega grátis acima de R$ 50</span>
+      <span>•</span>
+      <span>Tempo médio de entrega: <strong class="topbar__destaque">30 minutos</strong></span>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. HEADER TRANSLÚCIDO
+       ======================================================================== -->
+  <header class="header-site" id="headerPrincipal">
+    <div class="container header-site__wrapper">
+      
+      <!-- LOGO -->
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"/>
+            <path d="M4 15h16"/>
+            <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"/>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+
+      <!-- NAVEGAÇÃO DESKTOP -->
+      <nav aria-label="Navegação do site">
+        <ul class="nav-desktop">
+          <li><a href="{% url 'cardapio' %}">Cardápio</a></li>
+          <li><a href="#promocoes">Combos</a></li>
+          <li><a href="#diferenciais">Diferenciais</a></li>
+          <li><a href="#como-funciona">Como Funciona</a></li>
+        </ul>
+      </nav>
+
+      <!-- AÇÕES: LOGIN & CARRINHO -->
+      <div class="header-acoes">
+        {# DJANGO: Autenticação de Usuário #}
+        {% if user.is_authenticated %}
+          <a href="/perfil/" class="btn btn--secundario" style="padding: 10px 18px; font-size: 0.88rem;">
+            Olá, {{ user.username }}
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn--secundario" style="padding: 10px 18px; font-size: 0.88rem;">
+            Entrar
+          </a>
+        {% endif %}
+
+        <button class="btn-carrinho-header" id="btnAbrirCarrinho" aria-label="Ver sacola de compras">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="carrinho-badge" id="carrinhoBadge">0</span>
+        </button>
+
+        <button class="btn-menu-mobile" id="btnMenuMobile" aria-label="Abrir menu de navegação">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MENU MOBILE GAVETA -->
+  <div class="drawer-nav-mobile" id="menuMobileGaveta">
+    <ul>
+      <li><a href="{% url 'cardapio' %}">Cardápio Completo</a></li>
+      <li><a href="#promocoes">Combos & Promoções</a></li>
+      <li><a href="#diferenciais">Nossos Padrões</a></li>
+      <li><a href="#como-funciona">Como Funciona</a></li>
+      {% if not user.is_authenticated %}
+        <li><a href="{% url 'login' %}">Acessar Minha Conta</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <main>
+    <!-- ======================================================================
+         3. HERO SECTION COM FOTO EM DESTAQUE E PROVAS SOCIAIS
+         ====================================================================== -->
+    <section class="secao-hero">
+      <div class="container">
+        
+        <div class="hero-grid">
+          <div class="hero-conteudo">
+            <div class="badge-rotulo badge-rotulo--escuro">Smash burger artesanal</div>
+            <h1>O hambúrguer que chega quente, do jeito que você gosta.</h1>
+            <p>Carne 100% Angus prensada na chapa em temperatura altíssima, crosta crocante, queijo fundido e pão brioche amanteigado.</p>
+
+            <div class="hero-acoes">
+              <a href="#cardapio" class="btn btn--primario">Pedir agora</a>
+              <a href="{% url 'cardapio' %}" class="btn btn--secundario">Ver cardápio</a>
+            </div>
+
+            <!-- Consulta rápida de entrega -->
+            <form class="hero-cep" onsubmit="event.preventDefault(); checarEntrega();">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8A29D" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <input type="text" id="campoCepHero" placeholder="Informe seu CEP para checar o tempo de entrega">
+              <button type="submit" class="btn btn--primario" style="padding: 8px 16px; font-size: 0.85rem;">Verificar</button>
+            </form>
+          </div>
+
+          <div class="hero-imagem-box">
+            {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/hero-burger.jpg' %} #}
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop&q=80"
+                 alt="Smash burger duplo artesanal com queijo derretido"
+                 class="hero-imagem"
+                 loading="eager">
+          </div>
+        </div>
+
+        <!-- Provas Sociais -->
+        <div class="provas-sociais">
+          <div class="prova-item">
+            <div class="prova-item__icone">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div>
+              <strong>4.9 de 5.0 estrelas</strong>
+              <span>Mais de 2.400 avaliações</span>
+            </div>
+          </div>
+
+          <div class="prova-item">
+            <div class="prova-item__icone">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div>
+              <strong>+10.000 pedidos</strong>
+              <span>Entregues em perfeita condição</span>
+            </div>
+          </div>
+
+          <div class="prova-item">
+            <div class="prova-item__icone">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <strong>Tempo médio: 30 min</strong>
+              <span>Embalagens térmicas vedadas</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. CATEGORIAS (FILTRO SEM RECARREGAR)
+         ====================================================================== -->
+    <section class="secao-categorias" id="cardapio">
+      <div class="container">
+        
+        <div class="categorias-trilho" role="tablist" aria-label="Filtrar por categoria">
+          <button class="categoria-pill ativo" data-categoria="todos">
+            <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            Todos
+          </button>
+
+          {# DJANGO: categorias do banco de dados #}
+          {# {% for categoria in categorias %} #}
+          {#   <button class="categoria-pill" data-categoria="{{ categoria.slug }}">{{ categoria.nome }}</button> #}
+          {# {% endfor %} #}
+
+          {# EXEMPLO: remover quando o back-end estiver pronto #}
+          <button class="categoria-pill" data-categoria="burgers">
+            <svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 0 1 16 0H4zM4 15h16M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"/></svg>
+            Burgers
+          </button>
+          <button class="categoria-pill" data-categoria="batatas">
+            <svg viewBox="0 0 24 24"><path d="M5 11l2 9h10l2-9M5 11V6l4-3 3 4 3-4 4 3v5"/></svg>
+            Batatas
+          </button>
+          <button class="categoria-pill" data-categoria="combos">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Combos
+          </button>
+          <button class="categoria-pill" data-categoria="frango">
+            <svg viewBox="0 0 24 24"><path d="M18 10a6 6 0 0 0-12 0c0 7 6 11 6 11s6-4 6-11z"/></svg>
+            Frango
+          </button>
+          <button class="categoria-pill" data-categoria="bebidas">
+            <svg viewBox="0 0 24 24"><path d="M7 2h10l1 9a6 6 0 0 1-12 0l1-9zM6 22h12"/></svg>
+            Bebidas
+          </button>
+          <button class="categoria-pill" data-categoria="sobremesas">
+            <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4zM6 14h12l-2 8H8l-2-8z"/></svg>
+            Sobremesas
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. MAIS PEDIDOS / DESTAQUES
+         ====================================================================== -->
+    <section class="secao-produtos">
+      <div class="container">
+        
+        <div class="secao-cabecalho">
+          <div>
+            <span class="badge-rotulo">Seleção Especial</span>
+            <h2>Mais Pedidos da Semana</h2>
+            <p>Os favoritos indiscutíveis da nossa grelha preparados para você.</p>
+          </div>
+          <a href="{% url 'cardapio' %}" class="btn btn--secundario-claro">Ver Cardápio Completo</a>
+        </div>
+
+        <div class="produtos-grid" id="produtosGrid">
+
+          {# DJANGO: Loop de Produtos Dinâmicos #}
+          {# {% for produto in produtos %} #}
+          {# <article class="card-produto" data-categoria="{{ produto.categoria.slug }}"> #}
+          {#   <div class="card-produto__media"> #}
+          {#     <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="card-produto__img" loading="lazy"> #}
+          {#   </div> #}
+          {#   <div class="card-produto__conteudo"> #}
+          {#     <h3 class="card-produto__titulo">{{ produto.nome }}</h3> #}
+          {#     <p class="card-produto__descricao">{{ produto.descricao }}</p> #}
+          {#     <div class="card-produto__rodape"> #}
+          {#       <span class="card-produto__preco"><small>R$</small>{{ produto.preco }}</span> #}
+          {#     </div> #}
+          {#   </div> #}
+          {# </article> #}
+          {# {% endfor %} #}
+
+          {# ================================================================ #}
+          {# EXEMPLO: DADOS DE TESTE (Remover quando o back-end estiver pronto) #}
+          {# ================================================================ #}
+
+          <!-- PRODUTO 1 -->
+          <article class="card-produto fade-up" data-categoria="burgers" data-id="1" data-nome="Smash Clássico Duplo" data-preco="29.90">
+            <div class="card-produto__media">
+              <span class="card-produto__badge">Mais vendido</span>
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/burger-classico.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80"
+                   alt="Dois smash burgers com queijo cheddar fundido e cebola caramelizada"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Smash Clássico Duplo</h3>
+              <p class="card-produto__descricao">Dois ultra smash 90g de carne 100% Angus, american cheese derretido, cebola chapeada e molho artesanal no pão brioche.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>29,90</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(1, 'Smash Clássico Duplo', 29.90, this)" aria-label="Adicionar Smash Clássico Duplo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(1, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(1, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUTO 2 -->
+          <article class="card-produto fade-up" data-categoria="burgers" data-id="2" data-nome="Bacon Melt Trufado" data-preco="36.50">
+            <div class="card-produto__media">
+              <span class="card-produto__badge">Chef's Choice</span>
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/burger-bacon.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&auto=format&fit=crop&q=80"
+                   alt="Hambúrguer com fatias grossas de bacon crocante e maionese trufada"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Bacon Melt Trufado</h3>
+              <p class="card-produto__descricao">Blend Angus 160g, bacon crocante em tiras artesanais defumadas na macieira, creme de queijo trufado e brioche selado na manteiga.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>36,50</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(2, 'Bacon Melt Trufado', 36.50, this)" aria-label="Adicionar Bacon Melt Trufado">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(2, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(2, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUTO 3 -->
+          <article class="card-produto fade-up" data-categoria="batatas" data-id="3" data-nome="Batata Rústica com Alecrim" data-preco="19.00">
+            <div class="card-produto__media">
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/batata-rustica.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80"
+                   alt="Porção de batatas fritas douradas com ramos de alecrim fresco"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Batata Rústica com Alecrim</h3>
+              <p class="card-produto__descricao">Batatas especiais cortadas com casca, temperadas com flor de sal, alecrim fresco e acompanhadas de maionese verde da casa.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>19,00</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(3, 'Batata Rústica com Alecrim', 19.00, this)" aria-label="Adicionar Batata Rústica">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(3, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(3, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUTO 4 -->
+          <article class="card-produto fade-up" data-categoria="frango" data-id="4" data-nome="Crispy Chicken Spicy" data-preco="28.00">
+            <div class="card-produto__media">
+              <span class="card-produto__badge">Novidade</span>
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/crispy-chicken.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=600&auto=format&fit=crop&q=80"
+                   alt="Sanduíche de sobrecoxa de frango frita e crocante com picles"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Crispy Chicken Spicy</h3>
+              <p class="card-produto__descricao">Sobrecoxa marinada no buttermilk e frita com casquinha crocante, salada coleslaw cremosa e molho picante suave.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>28,00</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(4, 'Crispy Chicken Spicy', 28.00, this)" aria-label="Adicionar Crispy Chicken Spicy">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(4, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(4, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUTO 5 -->
+          <article class="card-produto fade-up" data-categoria="bebidas" data-id="5" data-nome="Pink Lemonade da Casa" data-preco="12.00">
+            <div class="card-produto__media">
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/pink-lemonade.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80"
+                   alt="Copo de limonada rosa gelada com frutas vermelhas"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Pink Lemonade 500ml</h3>
+              <p class="card-produto__descricao">Limonada natural extraída na hora, infusão artesanal de frutas vermelhas silvestres e folhas frescas de hortelã.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>12,00</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(5, 'Pink Lemonade 500ml', 12.00, this)" aria-label="Adicionar Pink Lemonade">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(5, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(5, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUTO 6 -->
+          <article class="card-produto fade-up" data-categoria="sobremesas" data-id="6" data-nome="Cheesecake de Frutas Vermelhas" data-preco="18.50">
+            <div class="card-produto__media">
+              {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/cheesecake.jpg' %} #}
+              <img src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop&q=80"
+                   alt="Fatia de cheesecake novaiorquino com calda de frutas vermelhas"
+                   class="card-produto__img"
+                   loading="lazy">
+            </div>
+            <div class="card-produto__conteudo">
+              <h3 class="card-produto__titulo">Cheesecake New York</h3>
+              <p class="card-produto__descricao">Massa crocante amanteigada de biscoito, creme de queijo aveludado e redução artesanal de framboesas e amoras.</p>
+              <div class="card-produto__rodape">
+                <div class="card-produto__preco"><small>R$</small>18,50</div>
+                
+                <div class="card-acao-comprar">
+                  <button class="btn-adicionar-produto" onclick="adicionarProdutoAoCarrinho(6, 'Cheesecake New York', 18.50, this)" aria-label="Adicionar Cheesecake">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <div class="card-seletor-qty">
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(6, -1, this)">-</button>
+                    <span class="qty-display-mini">1</span>
+                    <button class="btn-qty-mini" onclick="alterarQtdNoCard(6, 1, this)">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. BANNER DE PROMOÇÃO / COMBO
+         ====================================================================== -->
+    <section class="secao-promocao" id="promocoes">
+      <div class="container">
+        
+        <div class="card-promocao fade-up">
+          <div class="card-promocao__conteudo">
+            <div class="badge-rotulo badge-rotulo--escuro">Oferta Especial</div>
+            <h3>Combo Duplo Especial por R$ 39,90</h3>
+            <p>Dois Smash Clássicos com pão brioche amanteigado, uma porção generosa de batata rústica com alecrim e duas bebidas à sua escolha.</p>
+            <div>
+              <button class="btn btn--primario" onclick="adicionarProdutoAoCarrinho(99, 'Combo Duplo Especial', 39.90, this)">
+                Aproveitar Combo Agora
+              </button>
+            </div>
+          </div>
+          <div class="card-promocao__media">
+            {# TROCAR POR FOTO REAL DO PRODUTO: {% static 'img/banner-combo.jpg' %} #}
+            <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=800&auto=format&fit=crop&q=80"
+                 alt="Dois hambúrgueres acompanhados de batatas douradas e bebidas"
+                 class="card-promocao__img"
+                 loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. DIFERENCIAIS DE PADRÃO E QUALIDADE
+         ====================================================================== -->
+    <section class="secao-diferenciais" id="diferenciais">
+      <div class="container">
+        
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <span class="badge-rotulo">Nosso Compromisso</span>
+          <h2 style="font-family: var(--fonte-titulo); font-size: 2.3rem; font-weight: 800; margin-top: 8px;">Por que pedir na BURGA RUA?</h2>
+        </div>
+
+        <div class="diferenciais-grid">
+          
+          <div class="card-diferencial fade-up">
+            <div class="card-diferencial__icone">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="7"/>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+              </svg>
+            </div>
+            <h4>Carne 100% Angus</h4>
+            <p>Cortes nobres selecionados moídos diariamente. Zero conservantes ou misturas: sabor autêntico na brasa.</p>
+          </div>
+
+          <div class="card-diferencial fade-up">
+            <div class="card-diferencial__icone">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <h4>Entrega em 30 Minutos</h4>
+            <p>Roteirização inteligente e raio de atendimento controlado para que o seu pedido chegue sem esperas demoradas.</p>
+          </div>
+
+          <div class="card-diferencial fade-up">
+            <div class="card-diferencial__icone">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <h4>Chega Sempre Quente</h4>
+            <p>Embalagens com tecnologia de retenção de vapor: o pão não amolece e as batatas preservam a crocância.</p>
+          </div>
+
+          <div class="card-diferencial fade-up">
+            <div class="card-diferencial__icone">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+            </div>
+            <h4>Pagamento Sem Fricção</h4>
+            <p>Pague pelo Pix com confirmação instantânea ou cartão direto na entrega com as principais bandeiras.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. COMO FUNCIONA (PASSO A PASSO)
+         ====================================================================== -->
+    <section class="secao-passos" id="como-funciona">
+      <div class="container">
+        
+        <div style="text-align: center; max-width: 580px; margin: 0 auto;">
+          <span class="badge-rotulo">Simples & Rápido</span>
+          <h2 style="font-family: var(--fonte-titulo); font-size: 2.2rem; font-weight: 800; margin-top: 8px;">Como o seu pedido chega até você</h2>
+        </div>
+
+        <div class="passos-grid">
+          
+          <div class="passo-item">
+            <div class="passo-numero">1</div>
+            <div class="passo-texto">
+              <h4>Escolha seus Itens</h4>
+              <p>Navegue pelo cardápio, adicione os burgers, acompanhamentos e bebidas à sua sacola.</p>
+            </div>
+          </div>
+
+          <div class="passo-item">
+            <div class="passo-numero">2</div>
+            <div class="passo-texto">
+              <h4>Confirme os Dados</h4>
+              <p>Informe o endereço de entrega, forma de pagamento e receba o acompanhamento do status.</p>
+            </div>
+          </div>
+
+          <div class="passo-item">
+            <div class="passo-numero">3</div>
+            <div class="passo-texto">
+              <h4>Receba e Aproveite</h4>
+              <p>O entregador chega no tempo estimado com tudo lacrado e pronto para você saborear.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         9. AVALIAÇÕES DE CLIENTES
+         ====================================================================== -->
+    <section class="secao-avaliacoes">
+      <div class="container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <span class="badge-rotulo">Experiências Reais</span>
+            <h2 style="font-family: var(--fonte-titulo); font-size: 2.2rem; font-weight: 800; margin-top: 8px;">O que dizem os nossos clientes</h2>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700;">
+            <span style="color: var(--cor-ambar); font-size: 1.2rem;">★ 4.9</span>
+            <span style="color: var(--cor-texto-mutado); font-size: 0.9rem;">(2.400+ avaliações no Google)</span>
+          </div>
+        </div>
+
+        <div class="avaliacoes-grid">
+          
+          <div class="card-avaliacao fade-up">
+            <div class="card-avaliacao__estrelas">★★★★★</div>
+            <p>"O Smash Clássico Duplo é surreal. A carne tem aquela crostinha crocante perfeita e o queijo derrete na medida. Chegou aqui em 22 minutos, parecia que tinha acabado de sair da chapa."</p>
+            <div class="card-avaliacao__autor">
+              <div class="autor-avatar">RA</div>
+              <div class="autor-info">
+                <strong>Rodrigo Alves</strong>
+                <span>Cliente recorrente</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-avaliacao fade-up">
+            <div class="card-avaliacao__estrelas">★★★★★</div>
+            <p>"A batata rústica mantém a crocância de verdade, coisa que quase nenhum delivery consegue entregar. O molho trufado também é espetacular. Recomendo muito!"</p>
+            <div class="card-avaliacao__autor">
+              <div class="autor-avatar">MP</div>
+              <div class="autor-info">
+                <strong>Mariana Prado</strong>
+                <span>Avaliado ontem</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-avaliacao fade-up">
+            <div class="card-avaliacao__estrelas">★★★★★</div>
+            <p>"Pedi o combo para um jantar de domingo e fiquei impressionado com a apresentação e o cuidado das embalagens térmicas. Ganharam um fã fixo."</p>
+            <div class="card-avaliacao__autor">
+              <div class="autor-avatar">GS</div>
+              <div class="autor-info">
+                <strong>Gabriel Silveira</strong>
+                <span>Avaliado há 3 dias</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         10. CTA FINAL
+         ====================================================================== -->
+    <section class="secao-cta-final">
+      <div class="container">
+        <div class="cta-final-box">
+          <h2>Pronto para pedir o melhor smash da cidade?</h2>
+          <p>Peça agora pelo nosso cardápio online e receba na sua casa em até 30 minutos.</p>
+          <a href="#cardapio" class="btn btn--primario" style="font-size: 1.05rem; padding: 16px 36px;">
+            Fazer Meu Pedido
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       11. FOOTER ORGANIZADO
+       ======================================================================== -->
+  <footer class="footer-site">
+    <div class="container">
+      
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo-marca" style="margin-bottom: 16px;">
+            <div class="logo-marca__icone">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 11a8 8 0 0 1 16 0H4z"/><path d="M4 15h16"/></svg>
+            </div>
+            <span class="logo-marca__nome">BURGA RUA</span>
+          </a>
+          <p style="color: var(--cor-texto-claro-mutado); font-size: 0.9rem; max-width: 300px; line-height: 1.6;">
+            Hambúrgueres artesanais de alto padrão feitos com carne 100% Angus e ingredientes frescos, entregues na velocidade ideal.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="footer-social-btn" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="footer-social-btn" aria-label="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Navegação</h5>
+          <ul>
+            <li><a href="{% url 'cardapio' %}">Cardápio Completo</a></li>
+            <li><a href="#promocoes">Combos & Ofertas</a></li>
+            <li><a href="#diferenciais">Padrão de Qualidade</a></li>
+            <li><a href="#como-funciona">Rastreamento</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Atendimento</h5>
+          <ul>
+            <li><span style="color: var(--cor-texto-claro-mutado); font-size: 0.9rem;">Seg a Dom: 18h às 23h45</span></li>
+            <li><span style="color: var(--cor-texto-claro-mutado); font-size: 0.9rem;">contato@burgarua.com.br</span></li>
+            <li><span style="color: var(--cor-texto-claro-mutado); font-size: 0.9rem;">(11) 98765-4321</span></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Formas de Pagamento</h5>
+          <div class="pagamentos-icones">
+            <span>• Pix Instantâneo</span>
+            <span>• Visa & Mastercard</span>
+            <span>• Elo & Hipercard</span>
+            <span>• Vale Refeição (Alelo, Sodexo)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 BURGA RUA. Todos os direitos reservados. Sistema desenvolvido em Django.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       12. DRAWER DO CARRINHO (LATERAL)
+       ======================================================================== -->
+  <div class="carrinho-overlay" id="carrinhoOverlay"></div>
+  
+  <aside class="carrinho-drawer" id="carrinhoDrawer" aria-label="Carrinho de compras">
+    
+    <div class="drawer-header">
+      <h3>Sua Sacola</h3>
+      <button class="btn-fechar-drawer" id="btnFecharCarrinho" aria-label="Fechar sacola">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Barra de progresso para Frete Grátis -->
+    <div class="frete-barra-wrapper">
+      <div class="frete-barra-texto">
+        <span id="freteTexto">Faltam R$ 50,00 para frete grátis</span>
+        <span id="freteStatusIcon">🛵</span>
+      </div>
+      <div class="frete-progresso">
+        <div class="frete-progresso__fill" id="freteProgressoBarra"></div>
+      </div>
+    </div>
+
+    <div class="drawer-lista" id="drawerItensLista">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+
+    <div class="drawer-footer">
+      <div class="drawer-total">
+        <span>Total</span>
+        <span id="carrinhoTotalValor">R$ 0,00</span>
+      </div>
+      
+      {# DJANGO: rota para a tela de checkout #}
+      <a href="{% url 'checkout' %}" class="btn btn--primario" style="width: 100%;">
+        Finalizar Pedido
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- BARRA FIXA DE CARRINHO NO MOBILE -->
+  <div class="mobile-cart-bar" id="mobileCartBar">
+    <div>
+      <span style="font-size: 0.8rem; color: var(--cor-texto-mutado); display: block;">Total na sacola:</span>
+      <strong id="mobileCartTotal" style="font-family: var(--fonte-titulo); font-size: 1.15rem;">R$ 0,00</strong>
+    </div>
+    <button class="btn btn--primario" onclick="abrirDrawerCarrinho()" style="padding: 10px 20px; font-size: 0.9rem;">
+      Ver Sacola (<span id="mobileCartQtd">0</span>)
+    </button>
+  </div>
+
+  <!-- TOAST DE NOTIFICAÇÃO -->
+  <div class="toast-msg" id="toastNotificacao" role="status">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5CC24A" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastTexto">Item adicionado com sucesso!</span>
+  </div>
+
+  <!-- ========================================================================
+       13. JAVASCRIPT PURO (CARRINHO, FILTROS, SCROLL)
+       ======================================================================== -->
+  <script>
+    /* ESTADO DO CARRINHO (LocalStorage + Memória) */
+    let carrinho = JSON.parse(localStorage.getItem('burga_carrinho_premium')) || [];
+    const META_FRETE_GRATIS = 50.00;
+
+    // Elementos DOM
+    const headerSite = document.getElementById('headerPrincipal');
+    const btnAbrirCarrinho = document.getElementById('btnAbrirCarrinho');
+    const btnFecharCarrinho = document.getElementById('btnFecharCarrinho');
+    const carrinhoDrawer = document.getElementById('carrinhoDrawer');
+    const carrinhoOverlay = document.getElementById('carrinhoOverlay');
+    const drawerItensLista = document.getElementById('drawerItensLista');
+    const carrinhoTotalValor = document.getElementById('carrinhoTotalValor');
+    const carrinhoBadge = document.getElementById('carrinhoBadge');
+    const freteTexto = document.getElementById('freteTexto');
+    const freteProgressoBarra = document.getElementById('freteProgressoBarra');
+    const mobileCartTotal = document.getElementById('mobileCartTotal');
+    const mobileCartQtd = document.getElementById('mobileCartQtd');
+    const toast = document.getElementById('toastNotificacao');
+    const toastTexto = document.getElementById('toastTexto');
+
+    // Menu Mobile
+    const btnMenuMobile = document.getElementById('btnMenuMobile');
+    const menuMobileGaveta = document.getElementById('menuMobileGaveta');
+
+    btnMenuMobile.addEventListener('click', () => {
+      menuMobileGaveta.classList.toggle('aberto');
+    });
+
+    // Mudança de fundo do header ao rolar
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        headerSite.classList.add('scrolled');
+      } else {
+        headerSite.classList.remove('scrolled');
+      }
+    });
+
+    // Abrir/Fechar Carrinho
+    function abrirDrawerCarrinho() {
+      carrinhoDrawer.classList.add('aberto');
+      carrinhoOverlay.classList.add('aberto');
+    }
+
+    function fecharDrawerCarrinho() {
+      carrinhoDrawer.classList.remove('aberto');
+      carrinhoOverlay.classList.remove('aberto');
+    }
+
+    btnAbrirCarrinho.addEventListener('click', abrirDrawerCarrinho);
+    btnFecharCarrinho.addEventListener('click', fecharDrawerCarrinho);
+    carrinhoOverlay.addEventListener('click', fecharDrawerCarrinho);
+
+    // Toast Feedback
+    function mostrarToast(mensagem) {
+      toastTexto.textContent = mensagem;
+      toast.classList.add('visivel');
+      setTimeout(() => {
+        toast.classList.remove('visivel');
+      }, 2400);
+    }
+
+    // Atualização de UI do Carrinho
+    function renderizarCarrinhoUI() {
+      localStorage.setItem('burga_carrinho_premium', JSON.stringify(carrinho));
+
+      const qtdTotal = carrinho.reduce((sum, item) => sum + item.qtd, 0);
+      carrinhoBadge.textContent = qtdTotal;
+      mobileCartQtd.textContent = qtdTotal;
+
+      // Animação pop no badge
+      carrinhoBadge.classList.add('pop');
+      setTimeout(() => carrinhoBadge.classList.remove('pop'), 200);
+
+      // Calcular valor total
+      const totalPreco = carrinho.reduce((sum, item) => sum + (item.preco * item.qtd), 0);
+      const precoFormatado = `R$ ${totalPreco.toFixed(2).replace('.', ',')}`;
+      carrinhoTotalValor.textContent = precoFormatado;
+      mobileCartTotal.textContent = precoFormatado;
+
+      // Atualizar meta de frete grátis
+      if (totalPreco >= META_FRETE_GRATIS) {
+        freteTexto.textContent = 'Parabéns! Você ganhou Frete Grátis!';
+        freteProgressoBarra.style.width = '100%';
+        freteProgressoBarra.style.background = '#2E7D32';
+      } else {
+        const restante = META_FRETE_GRATIS - totalPreco;
+        freteTexto.textContent = `Faltam R$ ${restante.toFixed(2).replace('.', ',')} para frete grátis`;
+        const pct = (totalPreco / META_FRETE_GRATIS) * 100;
+        freteProgressoBarra.style.width = `${pct}%`;
+        freteProgressoBarra.style.background = 'var(--cor-destaque)';
+      }
+
+      // Renderizar itens da lista
+      if (carrinho.length === 0) {
+        drawerItensLista.innerHTML = `
+          <div style="text-align: center; padding: 48px 0; color: var(--cor-texto-mutado);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 12px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <p style="font-weight: 600;">Sua sacola está vazia</p>
+            <p style="font-size: 0.85rem; margin-top: 4px;">Adicione um smash burger para começar.</p>
+          </div>
+        `;
+        return;
+      }
+
+      drawerItensLista.innerHTML = '';
+      carrinho.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-carrinho';
+        div.innerHTML = `
+          <div class="item-carrinho__info">
+            <h5>${item.nome}</h5>
+            <span>R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</span>
+            <div class="item-carrinho__controles">
+              <button class="btn-qty-mini" onclick="ajustarQtdItem(${item.id}, -1)">-</button>
+              <span class="qty-display-mini">${item.qtd}</span>
+              <button class="btn-qty-mini" onclick="ajustarQtdItem(${item.id}, 1)">+</button>
+            </div>
+          </div>
+          <button onclick="removerItem(${item.id})" style="background: none; border: none; color: #A8A29D; cursor: pointer; padding: 4px;" title="Remover item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        `;
+        drawerItensLista.appendChild(div);
+      });
+    }
+
+    // Adicionar item
+    function adicionarProdutoAoCarrinho(id, nome, preco, btnElemento) {
+      const itemExistente = carrinho.find(i => i.id === id);
+      if (itemExistente) {
+        itemExistente.qtd += 1;
+      } else {
+        carrinho.push({ id, nome, preco, qtd: 1 });
+      }
+
+      // Se foi disparado de um card de produto, atualizar o seletor visual do card
+      if (btnElemento) {
+        const acaoBox = btnElemento.closest('.card-acao-comprar');
+        if (acaoBox) {
+          const btnAdd = acaoBox.querySelector('.btn-adicionar-produto');
+          const seletor = acaoBox.querySelector('.card-seletor-qty');
+          const qtyTxt = acaoBox.querySelector('.qty-display-mini');
+          
+          if (btnAdd && seletor && qtyTxt) {
+            btnAdd.style.display = 'none';
+            seletor.classList.add('visivel');
+            const itemAtualizado = carrinho.find(i => i.id === id);
+            qtyTxt.textContent = itemAtualizado ? itemAtualizado.qtd : 1;
+          }
+        }
+      }
+
+      renderizarCarrinhoUI();
+      mostrarToast(`${nome} adicionado à sacola!`);
+    }
+
+    // Controles de quantidade no card
+    function alterarQtdNoCard(id, delta, btnElemento) {
+      ajustarQtdItem(id, delta);
+      
+      const acaoBox = btnElemento.closest('.card-acao-comprar');
+      if (acaoBox) {
+        const btnAdd = acaoBox.querySelector('.btn-adicionar-produto');
+        const seletor = acaoBox.querySelector('.card-seletor-qty');
+        const qtyTxt = acaoBox.querySelector('.qty-display-mini');
+        const itemAtual = carrinho.find(i => i.id === id);
+
+        if (!itemAtual || itemAtual.qtd <= 0) {
+          seletor.classList.remove('visivel');
+          btnAdd.style.display = 'flex';
+        } else {
+          qtyTxt.textContent = itemAtual.qtd;
+        }
+      }
+    }
+
+    // Ajustar quantidade dentro do carrinho
+    function ajustarQtdItem(id, delta) {
+      const item = carrinho.find(i => i.id === id);
+      if (item) {
+        item.qtd += delta;
+        if (item.qtd <= 0) {
+          carrinho = carrinho.filter(i => i.id !== id);
+        }
+      }
+      renderizarCarrinhoUI();
+    }
+
+    // Remover item completo
+    function removerItem(id) {
+      carrinho = carrinho.filter(i => i.id !== id);
+      renderizarCarrinhoUI();
+    }
+
+    // Filtro por categorias com fade suave
+    const categoriaBotoes = document.querySelectorAll('.categoria-pill');
+    const cardsProdutos = document.querySelectorAll('.card-produto');
+
+    categoriaBotoes.forEach(botao => {
+      botao.addEventListener('click', () => {
+        categoriaBotoes.forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+
+        const cat = botao.getAttribute('data-categoria');
+
+        cardsProdutos.forEach(card => {
+          const cardCat = card.getAttribute('data-categoria');
+          if (cat === 'todos' || cardCat === cat) {
+            card.style.opacity = '0';
+            card.style.display = 'flex';
+            setTimeout(() => {
+              card.style.opacity = '1';
+            }, 50);
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Checagem de CEP (Hero)
+    function checarEntrega() {
+      const cep = document.getElementById('campoCepHero').value.trim();
+      if (cep) {
+        mostrarToast('✓ Entrega disponível em até 30 min para sua região!');
+      }
+    }
+
+    // Animação de entrada ao rolar (IntersectionObserver)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visivel');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      renderizarCarrinhoUI();
+    });
+  </script>
+</body>
+</html>
