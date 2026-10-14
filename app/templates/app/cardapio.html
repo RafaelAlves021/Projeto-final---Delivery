@@ -1,0 +1,20 @@
+
+<h1>Nosso cardápio</h1>
+
+{% for categoria in categorias %}
+    <h2>{{ categoria.nome }}</h2>
+
+    {% for produto in produtos %}
+        {% if produto.categoria_id == categoria.id %}
+            <article>
+                <h3>{{ produto.nome }}</h3>
+                <p>{{ produto.descricao }}</p>
+                <p>R$ {{ produto.preco }}</p>
+            </article>
+        {% endif %}
+    {% empty %}
+        <p>Nenhum produto disponível.</p>
+    {% endfor %}
+{% empty %}
+    <p>Nenhuma categoria disponível.</p>
+{% endfor %}
