@@ -1,4 +1,8 @@
-from django.shortcuts import render, Http404
+from django.shortcuts import render, Http404, redirect
+from django.contrib import messages
+from .forms import RegistrationForm, UserUpdateForm, PerfilUpdateForm
+from django.contrib.auth.decorators import login_required
+from .models import Perfil
 
 # Mock de dados simulando o retorno do banco de dados (Models)
 PRODUTOS_MOCK = [
@@ -78,3 +82,42 @@ def detalhe_produto(request, slug):
     if not produto:
         raise Http404("Produto não encontrado")
     return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Conta criada com sucesso! Faça seu login.')
+            return redirect('login')  # Redireciona para a tela de login
+    else:
+        form = RegistrationForm()
+    
+    return render(request, 'usuarios/register.html', {'form': form})
+
+
+@login_required
+def perfil_view(request):
+    # Garante que o perfil existe caso o utilizador seja antigo
+    perfil, created = Perfil.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        perfil_form = PerfilUpdateForm(request.POST, instance=perfil)
+        
+        if user_form.is_valid() and perfil_form.is_valid():
+            user_form.save()
+            perfil_form.save()
+            messages.success(request, 'Perfil atualizado com sucesso!')
+            return redirect('perfil')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        perfil_form = PerfilUpdateForm(instance=perfil)
+
+    context = {
+        'user_form': user_form,
+        'perfil_form': perfil_form,
+    }
+    return render(request, 'registration/perfil.html', context)

@@ -78,3 +78,11 @@ class ItemPedido(models.Model):
 
     def __str__(self):
         return f"{self.quantidade}x {self.produto.nome}"
+
+class Perfil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
+    telefone = models.CharField(max_length=20, blank=True)
+    endereco = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Perfil de {self.user.username}"

@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar | BURGA RUA</title>
+  
+  <!-- Fontes do projeto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Seu CSS principal -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body style="background-color: var(--cor-carvao, #141211); margin: 0; padding: 0;">
+
+  <main class="secao-login" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+    <div class="container" style="display: flex; justify-content: center; align-items: center;">
+      <div class="login-card-box">
+        
+        <!-- Cabeçalho do Card -->
+        <div class="login-cabecalho">
+          <span class="badge-rotulo badge-rotulo--escuro">Área do Cliente</span>
+          <h2>Acesse sua conta</h2>
+          <p>Faça login para acompanhar seus pedidos na BURGA RUA.</p>
+        </div>
+
+        <!-- Mensagens de Erro ou Alerta -->
+        {% if form.errors %}
+          <div class="login-erro-msg">
+            Nome de usuário ou senha incorretos. Verifique os dados inseridos.
+          </div>
+        {% endif %}
+
+        <!-- Formulário -->
+        <form method="POST" class="form-login">
+          {% csrf_token %}
+          
+          {{ form.as_p }}
+
+          <button type="submit" class="btn btn--primario" style="width: 100%; justify-content: center; margin-top: 8px;">
+            Entrar na Conta
+          </button>
+        </form>
+
+        <!-- Rodapé do Card -->
+        <div class="login-rodape">
+          <p>
+            Ainda não tem uma conta? 
+            <a href="{% url 'register' %}">Criar conta agora</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
