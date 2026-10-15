@@ -1,6 +1,5 @@
 from django.shortcuts import render, Http404
 
-# Mock de dados simulando o retorno do banco de dados (Models)
 PRODUTOS_MOCK = [
     {
         'id': 1,
@@ -71,10 +70,20 @@ PRODUTOS_MOCK = [
 ]
 
 def home(request):
-    return render(request, 'pedidos/home.html', {'produtos': PRODUTOS_MOCK})
+    termo = request.GET.get('busca', '').strip().lower()
+    produtos = PRODUTOS_MOCK
+    if termo:
+        produtos = [p for p in PRODUTOS_MOCK if termo in p['nome'].lower() or termo in p['descricao'].lower()]
+    return render(request, 'pedidos/home.html', {'produtos': produtos, 'termo_busca': termo})
 
 def detalhe_produto(request, slug):
     produto = next((p for p in PRODUTOS_MOCK if p['slug'] == slug), None)
     if not produto:
         raise Http404("Produto não encontrado")
     return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
+
+def carrinho(request):
+    return render(request, 'pedidos/carrinho.html')
+
+def checkout(request):
+    return render(request, 'pedidos/checkout.html')
