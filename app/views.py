@@ -4,7 +4,6 @@ from .forms import RegistrationForm, UserUpdateForm, PerfilUpdateForm
 from django.contrib.auth.decorators import login_required
 from .models import Perfil
 
-# Mock de dados simulando o retorno do banco de dados (Models)
 PRODUTOS_MOCK = [
     {
         'id': 1,
@@ -75,7 +74,11 @@ PRODUTOS_MOCK = [
 ]
 
 def home(request):
-    return render(request, 'pedidos/home.html', {'produtos': PRODUTOS_MOCK})
+    termo = request.GET.get('busca', '').strip().lower()
+    produtos = PRODUTOS_MOCK
+    if termo:
+        produtos = [p for p in PRODUTOS_MOCK if termo in p['nome'].lower() or termo in p['descricao'].lower()]
+    return render(request, 'pedidos/home.html', {'produtos': produtos, 'termo_busca': termo})
 
 def detalhe_produto(request, slug):
     produto = next((p for p in PRODUTOS_MOCK if p['slug'] == slug), None)
@@ -83,6 +86,7 @@ def detalhe_produto(request, slug):
         raise Http404("Produto não encontrado")
     return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
 
+<<<<<<< HEAD
 
 
 def register(request):
@@ -121,3 +125,10 @@ def perfil_view(request):
         'perfil_form': perfil_form,
     }
     return render(request, 'registration/perfil.html', context)
+=======
+def carrinho(request):
+    return render(request, 'pedidos/carrinho.html')
+
+def checkout(request):
+    return render(request, 'pedidos/checkout.html')
+>>>>>>> 04367fe0f2db5ee1ff16eb420c24500be2b1d117
