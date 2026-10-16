@@ -1900,3 +1900,55 @@
   .cardapio-app-layout {
     padding: 30px 0 60px;
   }
+
+/* ===== Página de detalhe do produto (celular primeiro) ===== */
+.container-detalhe { max-width: 1100px; margin: 24px auto 60px; padding: 0 20px; }
+.voltar-link { display: inline-flex; align-items: center; gap: 6px; color: var(--cor-texto-mutado); text-decoration: none; font-weight: 600; margin-bottom: 16px; }
+.voltar-link:hover { color: var(--cor-destaque); }
+.detalhe-card { display: grid; grid-template-columns: 1fr; background: var(--cor-superficie); border-radius: var(--raio-lg); border: 1px solid #ECE7DD; box-shadow: var(--sombra-card); overflow: hidden; }
+.detalhe-media img { width: 100%; height: 260px; object-fit: cover; }
+.detalhe-info { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.detalhe-info h1 { font-family: var(--fonte-titulo); font-size: 1.6rem; line-height: 1.2; }
+.detalhe-preco { font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.6rem; color: var(--cor-destaque); }
+.detalhe-desc { color: var(--cor-texto-mutado); }
+
+/* ===== Tablet (768px a 1099px) ===== */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .container { padding: 0 20px; }
+
+  /* Header da loja: perfil em cima, busca embaixo, ocupando a linha toda */
+  .loja-info-wrapper { flex-direction: column; align-items: stretch; }
+  .busca-cardapio-form { max-width: 100%; }
+
+  /* Detalhe do produto: imagem ao lado do texto */
+  .detalhe-card { grid-template-columns: 1fr 1fr; }
+  .detalhe-media img { height: 100%; min-height: 360px; }
+  .detalhe-info { padding: 32px; justify-content: center; }
+
+  /* Drawer da sacola um pouco mais largo */
+  .carrinho-drawer { max-width: 480px; }
+}
+
+/* Carrinho e checkout em 2 colunas já no tablet vertical */
+@media (min-width: 768px) {
+  .carrinho-grid { grid-template-columns: 1.5fr 1fr; align-items: start; }
+  .resumo-card { position: sticky; top: 96px; }
+}
+
+/* Em telas grandes, volta para as proporções originais */
+@media (min-width: 900px) {
+  .carrinho-grid { grid-template-columns: 1.8fr 1.2fr; }
+
+/* ===== Tela de login ===== */
+.login-layout { min-height: calc(100vh - 76px); display: flex; align-items: center; justify-content: center; padding: 24px 20px; }
+.login-card { width: 100%; max-width: 420px; background: var(--cor-superficie); border: 1px solid #ECE7DD; border-radius: var(--raio-lg); box-shadow: var(--sombra-card); padding: 32px 28px; }
+.login-card h2 { font-family: var(--fonte-titulo); font-size: 1.6rem; margin: 12px 0 4px; }
+.login-sub { color: var(--cor-texto-mutado); font-size: 0.92rem; margin-bottom: 20px; }
+.login-card .campo-grupo { margin-bottom: 16px; }
+.login-botao { width: 100%; margin-top: 4px; }
+.login-rodape { text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-top: 18px; }
+.login-rodape a { color: var(--cor-destaque); font-weight: 600; text-decoration: none; }
+
+/* ===== Erros e ajuda nos formulários ===== */
+.campo-erro { color: #C62828; font-size: 0.82rem; font-weight: 500; }
+.login-card form .campo-grupo { margin-bottom: 14px; }

@@ -41,9 +41,14 @@
       <!-- Ações do Header -->
       <div class="header-acoes">
         {% if user.is_authenticated %}
-          <span class="btn btn--secundario btn-continuar-compras">Olá, {{ user.username }}</span>
+          <span class="btn btn--secundario btn-continuar-compras">Olá, {{ user.first_name|default:user.username }}</span>
+          <form method="post" action="{% url 'logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn--secundario btn-continuar-compras">Sair</button>
+          </form>
         {% else %}
           <a href="{% url 'login' %}" class="btn btn--secundario btn-continuar-compras">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="btn btn--primario btn-continuar-compras">Cadastrar-se</a>
         {% endif %}
 
         <button type="button" class="btn-carrinho-header" id="btnAbrirCarrinho" aria-label="Ver sacola">
@@ -57,7 +62,13 @@
       </div>
     </div>
   </header>
-
+    {% if messages %}
+      <div class="container mensagens-django">
+    {% for message in messages %}
+      <div class="alerta alerta--{{ message.tags }}" role="alert">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
   <!-- Cabeçalho Operacional do Restaurante + Barra de Busca -->
   <section class="loja-header-status">
     <div class="container loja-info-wrapper">
