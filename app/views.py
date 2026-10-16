@@ -1,4 +1,12 @@
-from django.shortcuts import render, Http404
+from django.shortcuts import render, redirect, Http404
+from django.contrib import messages
+from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
+from .forms import CadastroForm
+
+class LoginComMensagem(SuccessMessageMixin, LoginView):
+    template_name = 'registration/login.html'
+    success_message = "Login realizado com sucesso!"
 
 PRODUTOS_MOCK = [
     {
@@ -87,3 +95,18 @@ def carrinho(request):
 
 def checkout(request):
     return render(request, 'pedidos/checkout.html')
+
+def cadastro(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CadastroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Cadastro realizado! Faça login para continuar.")
+            return redirect('login')
+    else:
+        form = CadastroForm()
+
+    return render(request, 'registration/cadastro.html', {'form': form})
