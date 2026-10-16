@@ -1,0 +1,31 @@
+[33mcommit 212a20da1dfe295beaa847b7169aaef0d461b2a3[m
+Author: BRENNER MOREIRA DA CRUZ <brenner.cruz@aluno.senac.rio>
+Date:   Wed Oct 14 21:20:03 2026 -0300
+
+    Login
+
+M	db.sqlite3
+
+[33mcommit 3b970ccf51fe6a090b82a7faf58a82929c8ee3c6[m
+Author: BRENO ALECK GOMES RIBEIRO <breno.aleck@aluno.senac.rio>
+Date:   Wed Oct 14 18:55:06 2026 -0300
+
+    Implementa listagem inicial do cardápio
+
+D	db.sqlite3
+
+[33mcommit a2117cccd9bece00a1736e27bea7fde284acd9d7[m
+Author: RafaelAlves021 <rflads23@gmail.com>
+Date:   Fri Oct 9 20:45:52 2026 -0300
+
+    Descreva aqui o que foi alterado
+
+A	db.sqlite3
+
+[33mcommit 27f45d699a462f9ca18dfdbbdb038c8da17735ab[m[33m ([m[1;31morigin/models[m[33m)[m
+Author: RAFAEL ALVES DA SILVA <asilva.rafael@aluno.senac.rio>
+Date:   Fri Oct 9 20:40:46 2026 -0300
+
+    Descreva aqui o que foi alterado
+
+A	db.sqlite3
