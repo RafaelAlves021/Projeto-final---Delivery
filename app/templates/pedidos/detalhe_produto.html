@@ -1,65 +1,368 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ produto.nome }} | BURGA RUA</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
-  
-  <!-- CSS global externo -->
-  <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ produto.nome }} — conheça esse sabor da BURGA RUA.">
+
+    <title>{{ produto.nome }} | BURGA RUA</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-<body>
 
-  <!-- Cabeçalho de Navegação -->
-  <header class="header-site">
-    <div class="container header-site__wrapper">
-      <a href="{% url 'home' %}" class="logo-marca">
-        <div class="logo-marca__icone">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
-            <path d="M4 15h16"></path>
-          </svg>
+<body class="pagina-detalhe-produto">
+
+    <div class="topbar">
+        <div class="container topbar__conteudo">
+            <span>Feito na hora · Sabor de verdade</span>
+            <span aria-hidden="true">•</span>
+            <span><strong class="topbar__destaque">BURGA RUA</strong></span>
         </div>
-        <span class="logo-marca__nome">BURGA RUA</span>
-      </a>
-      <a href="{% url 'home' %}" class="btn btn--secundario" style="padding: 8px 18px; font-size: 0.9rem;">
-        ← Voltar ao cardápio
-      </a>
     </div>
-  </header>
 
-  <!-- Área de Detalhes do Produto -->
-  <main class="container-detalhe">
-    <a href="{% url 'home' %}" class="voltar-link">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-      Voltar para o cardápio
-    </a>
+    <header class="header-site" id="headerPrincipal">
+        <div class="container header-site__wrapper">
 
-    <div class="detalhe-card">
-      <div class="detalhe-media">
-        <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}">
-      </div>
-      <div class="detalhe-info">
-        {% if produto.badge %}
-          <span class="badge-rotulo">{{ produto.badge }}</span>
-        {% endif %}
-        <h1>{{ produto.nome }}</h1>
-        <div class="detalhe-preco">R$ {{ produto.preco }}</div>
-        <p class="detalhe-desc">{{ produto.descricao }}</p>
+            <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA - Início">
+                <div class="logo-marca__icone">
+                    <svg width="22" height="22" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.2"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+                        <path d="M4 15h16"></path>
+                        <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path>
+                    </svg>
+                </div>
+                <span class="logo-marca__nome">BURGA RUA</span>
+            </a>
 
-        <a href="{% url 'home' %}" class="btn btn--primario" style="width: 100%; padding: 18px; text-decoration: none;">
-          Adicionar ao Pedido • R$ {{ produto.preco }}
-        </a>
-      </div>
-    </div>
-  </main>
+            <nav aria-label="Navegação principal">
+                <ul class="nav-desktop">
+                    <li><a href="{% url 'home' %}">Início</a></li>
+                    <li><a href="{% url 'cardapio' %}" aria-current="page">Cardápio</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-acoes">
+                <a href="{% url 'cardapio' %}" class="btn btn--secundario detalhe-voltar-header">
+                    ← Voltar ao cardápio
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="container container-detalhe">
+
+        <nav class="detalhe-breadcrumb" aria-label="Você está em">
+            <a href="{% url 'home' %}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a href="{% url 'cardapio' %}">Cardápio</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{{ produto.nome }}</span>
+        </nav>
+
+        <article class="detalhe-card">
+
+            <div class="detalhe-media">
+
+                {% if produto.imagem_url %}
+                    <img class="detalhe-imagem"
+                         src="{{ produto.imagem_url }}"
+                         alt="{{ produto.nome }}">
+                {% elif produto.imagem %}
+                    <img class="detalhe-imagem"
+                         src="{{ produto.imagem.url }}"
+                         alt="{{ produto.nome }}">
+                {% else %}
+                    <div class="detalhe-imagem-placeholder"
+                         role="img"
+                         aria-label="Imagem não cadastrada">
+                        🍔
+                    </div>
+                {% endif %}
+
+                {% if produto.preco_promocional %}
+                    <span class="detalhe-selo">Oferta especial</span>
+                {% endif %}
+
+                <span class="detalhe-foto-legenda">
+                    <span aria-hidden="true">✦</span>
+                    Preparado na hora
+                </span>
+
+            </div>
+
+            <div class="detalhe-info">
+
+                <div class="detalhe-info-topo">
+                    <span class="detalhe-categoria">
+                        {{ produto.categoria.nome }}
+                    </span>
+
+                    <span class="detalhe-disponibilidade">
+                        <span aria-hidden="true">●</span>
+                        Disponível para pedir
+                    </span>
+                </div>
+
+                <h1 class="detalhe-titulo">{{ produto.nome }}</h1>
+
+                <p class="detalhe-desc">
+                    {{ produto.descricao|default:"Uma delícia preparada especialmente para você." }}
+                </p>
+
+                <div class="detalhe-separador"></div>
+
+                <div class="detalhe-preco-area">
+                    <span class="detalhe-preco-label">Preço do produto</span>
+
+                    <div class="detalhe-preco-linha">
+                        {% if produto.preco_promocional %}
+                            <strong class="detalhe-preco"
+                                    id="detalhePreco"
+                                    data-preco-base="{{ produto.preco_promocional|stringformat:'s' }}">
+                                R$ {{ produto.preco_promocional|floatformat:2 }}
+                            </strong>
+
+                            <span class="detalhe-preco-antigo">
+                                R$ {{ produto.preco|floatformat:2 }}
+                            </span>
+                        {% else %}
+                            <strong class="detalhe-preco"
+                                    id="detalhePreco"
+                                    data-preco-base="{{ produto.preco|stringformat:'s' }}">
+                                R$ {{ produto.preco|floatformat:2 }}
+                            </strong>
+                        {% endif %}
+                    </div>
+
+                    <span class="detalhe-economia" id="detalheResumoPreco">
+                        Personalize seu pedido como preferir.
+                    </span>
+                </div>
+
+                <!-- PERSONALIZAÇÃO DO PRODUTO -->
+                <section class="personalizacao-lanche"
+                         id="personalizacaoLanche"
+                         aria-labelledby="personalizacaoTitulo">
+
+                    <div class="personalizacao-cabecalho">
+                        <span class="badge-rotulo">DO SEU JEITO</span>
+                        <h2 id="personalizacaoTitulo">Personalize seu lanche</h2>
+                        <p>Escolha os ingredientes, adicionais e molhos.</p>
+                    </div>
+
+                    {% if ingredientes %}
+                        <fieldset class="personalizacao-grupo">
+                            <legend>🥬 Ingredientes</legend>
+                            <p class="personalizacao-ajuda">
+                                Desmarque o que você não quer no seu lanche.
+                            </p>
+
+                            <div class="personalizacao-opcoes">
+                                {% for relacao in ingredientes %}
+                                    <label class="personalizacao-opcao">
+                                        <input
+                                            type="checkbox"
+                                            name="ingredientes"
+                                            value="{{ relacao.ingrediente.id }}"
+                                            data-nome="{{ relacao.ingrediente.nome }}"
+                                            {% if relacao.removivel %}checked{% else %}checked disabled{% endif %}
+                                        >
+
+                                        <span class="personalizacao-opcao__texto">
+                                            <strong>{{ relacao.ingrediente.nome }}</strong>
+
+                                            {% if not relacao.removivel %}
+                                                <small>Ingrediente fixo</small>
+                                            {% endif %}
+                                        </span>
+
+                                        <span class="personalizacao-opcao__estado"
+                                              aria-hidden="true">✓</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    {% endif %}
+
+                    {% if adicionais %}
+                        <fieldset class="personalizacao-grupo">
+                            <legend>🍳 Adicionais</legend>
+                            <p class="personalizacao-ajuda">
+                                Adicione um toque extra ao seu pedido.
+                            </p>
+
+                            <div class="personalizacao-opcoes">
+                                {% for relacao in adicionais %}
+                                    <label class="personalizacao-opcao">
+                                        <input
+                                            type="checkbox"
+                                            name="adicionais"
+                                            value="{{ relacao.adicional.id }}"
+                                            data-nome="{{ relacao.adicional.nome }}"
+                                            data-preco="{{ relacao.adicional.preco|stringformat:'s' }}"
+                                        >
+
+                                        <span class="personalizacao-opcao__texto">
+                                            <strong>{{ relacao.adicional.nome }}</strong>
+
+                                            {% if relacao.adicional.descricao %}
+                                                <small>{{ relacao.adicional.descricao }}</small>
+                                            {% endif %}
+                                        </span>
+
+                                        <span class="personalizacao-opcao__preco">
+                                            + R$ {{ relacao.adicional.preco|floatformat:2 }}
+                                        </span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    {% endif %}
+
+                    {% if molhos %}
+                        <fieldset class="personalizacao-grupo">
+                            <legend>🥫 Molhos</legend>
+                            <p class="personalizacao-ajuda">
+                                Escolha os molhos que combinam com você.
+                            </p>
+
+                            <div class="personalizacao-opcoes">
+                                {% for relacao in molhos %}
+                                    <label class="personalizacao-opcao">
+                                        <input
+                                            type="checkbox"
+                                            name="molhos"
+                                            value="{{ relacao.molho.id }}"
+                                            data-nome="{{ relacao.molho.nome }}"
+                                            data-preco="{{ relacao.molho.preco|stringformat:'s' }}"
+                                        >
+
+                                        <span class="personalizacao-opcao__texto">
+                                            <strong>{{ relacao.molho.nome }}</strong>
+
+                                            {% if relacao.molho.descricao %}
+                                                <small>{{ relacao.molho.descricao }}</small>
+                                            {% endif %}
+                                        </span>
+
+                                        {% if relacao.molho.preco > 0 %}
+                                            <span class="personalizacao-opcao__preco">
+                                                + R$ {{ relacao.molho.preco|floatformat:2 }}
+                                            </span>
+                                        {% else %}
+                                            <span class="personalizacao-opcao__gratuito">
+                                                Grátis
+                                            </span>
+                                        {% endif %}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    {% endif %}
+
+                    {% if not ingredientes and not adicionais and not molhos %}
+                        <div class="personalizacao-vazia">
+                            <strong>Este produto ainda não tem opções cadastradas.</strong>
+                            <p>
+                                Em breve você poderá personalizá-lo por aqui.
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    <div class="personalizacao-grupo">
+                        <label for="observacoesPersonalizacao">
+                            <strong>📝 Alguma observação?</strong>
+                        </label>
+
+                        <textarea
+                            id="observacoesPersonalizacao"
+                            name="observacoes_personalizacao"
+                            class="personalizacao-observacoes"
+                            rows="3"
+                            maxlength="255"
+                            placeholder="Ex.: caprichar no molho, cortar ao meio..."
+                        ></textarea>
+                    </div>
+
+                </section>
+
+                <div class="detalhe-beneficios">
+                    <div class="detalhe-beneficio">
+                        <span class="detalhe-beneficio-icone" aria-hidden="true">♨</span>
+                        <span>
+                            <strong>Feito na hora</strong>
+                            <small>Preparado após o pedido</small>
+                        </span>
+                    </div>
+
+                    <div class="detalhe-beneficio">
+                        <span class="detalhe-beneficio-icone" aria-hidden="true">♡</span>
+                        <span>
+                            <strong>Sabor de verdade</strong>
+                            <small>Do nosso jeito para você</small>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="detalhe-acoes">
+                    {% if produto.disponivel %}
+                        <button
+                            type="button"
+                            class="btn btn--primario btn-adicionar-produto detalhe-btn-adicionar"
+                            data-id="{{ produto.id }}"
+                            data-nome="{{ produto.nome }}"
+                            data-preco="{% if produto.preco_promocional %}{{ produto.preco_promocional|stringformat:'s' }}{% else %}{{ produto.preco|stringformat:'s' }}{% endif %}"
+                            data-imagem="{% if produto.imagem_url %}{{ produto.imagem_url }}{% elif produto.imagem %}{{ produto.imagem.url }}{% endif %}"
+                            aria-label="Adicionar {{ produto.nome }} personalizado ao carrinho"
+                        >
+                            <span>Adicionar ao carrinho</span>
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    {% else %}
+                        <button type="button"
+                                class="btn btn--primario detalhe-btn-adicionar"
+                                disabled>
+                            Produto indisponível
+                        </button>
+                    {% endif %}
+
+                    <a href="{% url 'cardapio' %}" class="detalhe-continuar">
+                        ← Continuar explorando o cardápio
+                    </a>
+                </div>
+
+            </div>
+        </article>
+
+        <section class="detalhe-rodape-chamada">
+            <span class="badge-rotulo">BATEU A FOME?</span>
+            <p>Escolha seus favoritos e monte seu pedido.</p>
+            <a href="{% url 'cardapio' %}" class="detalhe-link-cardapio">
+                Ver outros produtos →
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="footer-site">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} BURGA RUA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'main.js' %}"></script>
 
 </body>
 </html>

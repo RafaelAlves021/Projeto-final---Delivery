@@ -11,7 +11,10 @@
 
     let carrinho = carregarCarrinho();
 
-    // Converte preços para números.
+    // -----------------------------------------------------
+    // PREÇOS
+    // -----------------------------------------------------
+
     function converterPreco(valor) {
         if (typeof valor === "number") {
             return Number.isFinite(valor) && valor >= 0 ? valor : 0;
@@ -32,7 +35,17 @@
         return Number.isFinite(numero) && numero >= 0 ? numero : 0;
     }
 
-    // Carrega o carrinho salvo.
+    function formatarPreco(valor) {
+        return converterPreco(valor).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+    // -----------------------------------------------------
+    // PERSISTÊNCIA DO CARRINHO
+    // -----------------------------------------------------
+
     function carregarCarrinho() {
         try {
             const salvo = localStorage.getItem(CHAVE_CARRINHO);
@@ -46,14 +59,21 @@
             return dados
                 .filter(item =>
                     item &&
-                    Number.isFinite(Number(item.id)) &&
+                    Number.isSafeInteger(Number(item.id)) &&
+                    Number(item.id) > 0 &&
                     String(item.nome || "").trim() !== ""
                 )
                 .map(item => ({
                     id: Number(item.id),
                     nome: String(item.nome),
                     preco: converterPreco(item.preco),
-                    qtd: Math.max(1, Math.floor(Number(item.qtd) || 1))
+                    qtd: Math.max(1, Math.floor(Number(item.qtd) || 1)),
+                    imagem: String(item.imagem || ""),
+                    personalizacao:
+                        item.personalizacao &&
+                        typeof item.personalizacao === "object"
+                            ? item.personalizacao
+                            : {}
                 }))
                 .filter(item => item.preco > 0);
         } catch (erro) {
@@ -70,14 +90,8 @@
             );
         } catch (erro) {
             console.error("Erro ao salvar o carrinho:", erro);
+            mostrarToast("Não foi possível salvar o carrinho.");
         }
-    }
-
-    function formatarPreco(valor) {
-        return converterPreco(valor).toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL"
-        });
     }
 
     function obterTotal() {
@@ -94,21 +108,53 @@
         );
     }
 
+    // -----------------------------------------------------
+    // AVISOS
+    // -----------------------------------------------------
+
     function mostrarToast(mensagem) {
         const toast = document.getElementById("toastNotificacao");
         const texto = document.getElementById("toastTexto");
 
-        if (!toast || !texto) return;
+        if (toast && texto) {
+            texto.textContent = mensagem;
+            toast.classList.add("visivel");
 
-        texto.textContent = mensagem;
-        toast.classList.add("visivel");
+            clearTimeout(mostrarToast.timeout);
+
+            mostrarToast.timeout = setTimeout(() => {
+                toast.classList.remove("visivel");
+            }, 2400);
+
+            return;
+        }
+
+        let aviso = document.getElementById("toastDetalheProduto");
+
+        if (!aviso) {
+            aviso = document.createElement("div");
+            aviso.id = "toastDetalheProduto";
+            aviso.setAttribute("role", "status");
+            aviso.setAttribute("aria-live", "polite");
+
+            // O aviso usa uma classe; a aparência fica no CSS.
+            aviso.className = "toast-detalhe-produto";
+            document.body.appendChild(aviso);
+        }
+
+        aviso.textContent = mensagem;
+        aviso.classList.add("visivel");
 
         clearTimeout(mostrarToast.timeout);
 
         mostrarToast.timeout = setTimeout(() => {
-            toast.classList.remove("visivel");
-        }, 2400);
+            aviso.classList.remove("visivel");
+        }, 2600);
     }
+
+    // -----------------------------------------------------
+    // ABRIR E FECHAR A GAVETA
+    // -----------------------------------------------------
 
     function abrirCarrinho() {
         const drawer = document.getElementById("carrinhoDrawer");
@@ -119,7 +165,9 @@
             drawer.setAttribute("aria-hidden", "false");
         }
 
-        if (overlay) overlay.classList.add("aberto");
+        if (overlay) {
+            overlay.classList.add("aberto");
+        }
     }
 
     function fecharCarrinho() {
@@ -131,10 +179,15 @@
             drawer.setAttribute("aria-hidden", "true");
         }
 
-        if (overlay) overlay.classList.remove("aberto");
+        if (overlay) {
+            overlay.classList.remove("aberto");
+        }
     }
 
-    // Atualiza os botões dos cartões de produtos.
+    // -----------------------------------------------------
+    // ATUALIZAR BOTÕES DOS PRODUTOS
+    // -----------------------------------------------------
+
     function sincronizarBotoesCards() {
         document.querySelectorAll(".card-produto").forEach(card => {
             const botao = card.querySelector(".btn-adicionar-produto");
@@ -142,16 +195,22 @@
             if (!botao) return;
 
             const id = Number(botao.dataset.id);
-            const item = carrinho.find(produto => produto.id === id);
+
+            const item = carrinho.find(produto =>
+                produto.id === id &&
+                Object.keys(produto.personalizacao || {}).length === 0
+            );
 
             if (item) {
                 botao.dataset.quantidade = String(item.qtd);
+
                 botao.setAttribute(
                     "aria-label",
                     `${item.nome}, ${item.qtd} no carrinho`
                 );
             } else {
                 delete botao.dataset.quantidade;
+
                 botao.setAttribute(
                     "aria-label",
                     `Adicionar ${botao.dataset.nome || "produto"} ao carrinho`
@@ -160,7 +219,10 @@
         });
     }
 
-    // Cria o ícone de lixeira em SVG.
+    // -----------------------------------------------------
+    // ÍCONE DE LIXEIRA
+    // -----------------------------------------------------
+
     function criarIconeLixeira() {
         const svg = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -200,7 +262,10 @@
         return svg;
     }
 
-    // Atualiza o carrinho, totais e frete.
+    // -----------------------------------------------------
+    // RENDERIZAR O CARRINHO
+    // -----------------------------------------------------
+
     function renderizarCarrinho() {
         salvarCarrinho();
 
@@ -221,6 +286,7 @@
         if (totalTexto) totalTexto.textContent = formatarPreco(total);
         if (mobileTotal) mobileTotal.textContent = formatarPreco(total);
 
+        // Frete grátis a partir de R$ 50.
         if (freteTexto && barraFrete) {
             if (total >= META_FRETE_GRATIS) {
                 freteTexto.textContent =
@@ -230,6 +296,7 @@
                 barraFrete.style.background = "#2E7D32";
             } else {
                 const restante = META_FRETE_GRATIS - total;
+
                 const percentual = Math.min(
                     100,
                     (total / META_FRETE_GRATIS) * 100
@@ -243,6 +310,7 @@
             }
         }
 
+        // Se a página não tiver gaveta, atualiza os elementos disponíveis.
         if (!lista) {
             sincronizarBotoesCards();
             return;
@@ -256,8 +324,6 @@
             vazio.className = "carrinho-vazio";
             vazio.textContent =
                 "Sua sacola está vazia. Adicione um produto para começar.";
-            vazio.style.padding = "32px 12px";
-            vazio.style.textAlign = "center";
 
             lista.appendChild(vazio);
             sincronizarBotoesCards();
@@ -268,6 +334,22 @@
             const linha = document.createElement("div");
             linha.className = "item-carrinho";
 
+            // Imagem, quando disponível.
+            if (item.imagem) {
+                const imagem = document.createElement("img");
+
+                imagem.className = "item-carrinho__imagem";
+                imagem.src = item.imagem;
+                imagem.alt = item.nome;
+                imagem.loading = "lazy";
+
+                imagem.addEventListener("error", () => {
+                    imagem.remove();
+                }, { once: true });
+
+                linha.appendChild(imagem);
+            }
+
             const informacoes = document.createElement("div");
             informacoes.className = "item-carrinho__info";
 
@@ -277,6 +359,39 @@
             const preco = document.createElement("span");
             preco.textContent = formatarPreco(item.preco * item.qtd);
 
+            informacoes.append(nome, preco);
+
+            // Exibe personalização caso ela já esteja salva no item.
+            const personalizacao = item.personalizacao || {};
+            const escolhas = [];
+
+            ["ingredientes", "adicionais", "molhos"].forEach(grupo => {
+                if (Array.isArray(personalizacao[grupo])) {
+                    personalizacao[grupo].forEach(escolha => {
+                        if (typeof escolha === "string") {
+                            escolhas.push(escolha);
+                        } else if (escolha && escolha.nome) {
+                            escolhas.push(escolha.nome);
+                        }
+                    });
+                }
+            });
+
+            if (personalizacao.observacoes) {
+                escolhas.push(
+                    `Observação: ${String(personalizacao.observacoes)}`
+                );
+            }
+
+            if (escolhas.length) {
+                const detalhes = document.createElement("small");
+
+                detalhes.className = "item-carrinho__personalizacao";
+                detalhes.textContent = escolhas.join(" • ");
+
+                informacoes.appendChild(detalhes);
+            }
+
             const controles = document.createElement("div");
             controles.className = "item-carrinho__controles";
 
@@ -285,8 +400,9 @@
             menos.className = "btn-qty-mini btn-carrinho-menos";
             menos.textContent = "−";
             menos.setAttribute("aria-label", `Diminuir ${item.nome}`);
+
             menos.addEventListener("click", () => {
-                ajustarQuantidade(item.id, -1);
+                ajustarQuantidade(item.chave || item.id, -1);
             });
 
             const quantidadeItem = document.createElement("span");
@@ -298,21 +414,23 @@
             mais.className = "btn-qty-mini btn-carrinho-mais";
             mais.textContent = "+";
             mais.setAttribute("aria-label", `Adicionar ${item.nome}`);
+
             mais.addEventListener("click", () => {
-                ajustarQuantidade(item.id, 1);
+                ajustarQuantidade(item.chave || item.id, 1);
             });
 
             controles.append(menos, quantidadeItem, mais);
-            informacoes.append(nome, preco, controles);
+            informacoes.appendChild(controles);
 
-            // Botão de remover com ícone de lixeira.
             const remover = document.createElement("button");
             remover.type = "button";
             remover.className = "btn-carrinho-remover";
+
             remover.setAttribute(
                 "aria-label",
                 `Remover ${item.nome} do carrinho`
             );
+
             remover.title = "Remover produto";
 
             const textoRemover = document.createElement("span");
@@ -321,7 +439,7 @@
             remover.append(criarIconeLixeira(), textoRemover);
 
             remover.addEventListener("click", () => {
-                removerItem(item.id);
+                removerItem(item.chave || item.id);
             });
 
             linha.append(informacoes, remover);
@@ -331,10 +449,18 @@
         sincronizarBotoesCards();
     }
 
-    function ajustarQuantidade(id, variacao) {
-        const item = carrinho.find(
-            produto => produto.id === Number(id)
+    // -----------------------------------------------------
+    // QUANTIDADE E REMOÇÃO
+    // -----------------------------------------------------
+
+    function localizarItem(identificador) {
+        return carrinho.find(item =>
+            String(item.chave || item.id) === String(identificador)
         );
+    }
+
+    function ajustarQuantidade(identificador, variacao) {
+        const item = localizarItem(identificador);
 
         if (!item) return;
 
@@ -342,23 +468,33 @@
 
         if (item.qtd <= 0) {
             carrinho = carrinho.filter(
-                produto => produto.id !== Number(id)
+                produto => produto !== item
             );
         }
 
         renderizarCarrinho();
     }
 
-    function removerItem(id) {
-        carrinho = carrinho.filter(
-            produto => produto.id !== Number(id)
+    function removerItem(identificador) {
+        carrinho = carrinho.filter(item =>
+            String(item.chave || item.id) !== String(identificador)
         );
 
         renderizarCarrinho();
         mostrarToast("Produto removido da sacola.");
     }
 
-    function adicionarProduto(id, nome, preco) {
+    // -----------------------------------------------------
+    // ADICIONAR PRODUTO
+    // -----------------------------------------------------
+
+    function adicionarProduto(
+        id,
+        nome,
+        preco,
+        imagem = "",
+        personalizacao = {}
+    ) {
         const idConvertido = Number(id);
         const nomeConvertido = String(nome || "").trim();
         const precoConvertido = converterPreco(preco);
@@ -381,18 +517,32 @@
             return;
         }
 
-        const existente = carrinho.find(
-            item => item.id === idConvertido
+        const escolhas = personalizacao &&
+            typeof personalizacao === "object"
+                ? personalizacao
+                : {};
+
+        // Combina ID e personalização para separar versões diferentes
+        // do mesmo produto no carrinho.
+        const assinatura = JSON.stringify(escolhas, Object.keys(escolhas).sort());
+
+        const chave = `${idConvertido}_${assinatura}`;
+
+        const existente = carrinho.find(item =>
+            String(item.chave || item.id) === chave
         );
 
         if (existente) {
             existente.qtd += 1;
         } else {
             carrinho.push({
+                chave,
                 id: idConvertido,
                 nome: nomeConvertido,
                 preco: precoConvertido,
-                qtd: 1
+                qtd: 1,
+                imagem: String(imagem || ""),
+                personalizacao: escolhas
             });
         }
 
@@ -400,7 +550,10 @@
         mostrarToast(`${nomeConvertido} adicionado à sacola!`);
     }
 
-    // Registra os eventos da página.
+    // -----------------------------------------------------
+    // EVENTOS
+    // -----------------------------------------------------
+
     function inicializarCarrinho() {
         const header = document.getElementById("headerPrincipal");
 
@@ -422,24 +575,90 @@
         if (abrirPromo) abrirPromo.addEventListener("click", abrirCarrinho);
         if (abrirMobile) abrirMobile.addEventListener("click", abrirCarrinho);
 
-        document.querySelectorAll(".btn-adicionar-produto").forEach(botao => {
-            botao.addEventListener("click", () => {
-                if (botao.disabled) return;
+        // Delegação de eventos: funciona também na página de detalhes.
+        document.addEventListener("click", evento => {
+            const botao = evento.target.closest(".btn-adicionar-produto");
 
-                const card = botao.closest(".card-produto");
-                const id = Number(botao.dataset.id);
-                const nome = botao.dataset.nome || card?.dataset.nome || "";
-                const preco = botao.dataset.preco;
+            if (!botao || botao.disabled) return;
 
-                adicionarProduto(id, nome, preco);
-            });
+            evento.preventDefault();
+
+            const card = botao.closest(".card-produto");
+
+            const id = Number(botao.dataset.id);
+            const nome =
+                botao.dataset.nome ||
+                card?.dataset.nome ||
+                document.querySelector(".detalhe-titulo")?.textContent?.trim() ||
+                "";
+
+            const preco = botao.dataset.preco;
+
+            const imagem =
+                botao.dataset.imagem ||
+                card?.querySelector("img")?.src ||
+                document.querySelector(".detalhe-imagem")?.src ||
+                "";
+
+            // Lê personalização se o template disponibilizar os campos.
+            const personalizacao = {
+                ingredientes: Array.from(
+                    document.querySelectorAll(
+                        '[name="ingredientes"]:checked'
+                    )
+                ).map(campo => ({
+                    id: campo.value,
+                    nome: campo.dataset.nome || campo.labels?.[0]?.textContent?.trim() || campo.value
+                })),
+
+                adicionais: Array.from(
+                    document.querySelectorAll(
+                        '[name="adicionais"]:checked'
+                    )
+                ).map(campo => ({
+                    id: campo.value,
+                    nome: campo.dataset.nome || campo.labels?.[0]?.textContent?.trim() || campo.value,
+                    preco: converterPreco(campo.dataset.preco)
+                })),
+
+                molhos: Array.from(
+                    document.querySelectorAll(
+                        '[name="molhos"]:checked'
+                    )
+                ).map(campo => ({
+                    id: campo.value,
+                    nome: campo.dataset.nome || campo.labels?.[0]?.textContent?.trim() || campo.value
+                })),
+
+                observacoes:
+                    document.querySelector(
+                        '[name="observacoes_personalizacao"]'
+                    )?.value?.trim() || ""
+            };
+
+            const adicionaisTotal = personalizacao.adicionais.reduce(
+                (soma, adicional) => soma + adicional.preco,
+                0
+            );
+
+            adicionarProduto(
+                id,
+                nome,
+                converterPreco(preco) + adicionaisTotal,
+                imagem,
+                personalizacao
+            );
         });
 
         const combo = document.getElementById("btnAdicionarCombo");
 
         if (combo) {
             combo.addEventListener("click", () => {
-                adicionarProduto(99, "Combo Duplo Especial", 39.90);
+                adicionarProduto(
+                    99,
+                    "Combo Duplo Especial",
+                    39.90
+                );
             });
         }
 

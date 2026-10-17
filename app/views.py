@@ -1,12 +1,11 @@
 
-from django.shortcuts import render
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404
 
 from .models import Produto, Categoria
 
 
-# Produtos temporários utilizados na página inicial e nos detalhes.
-# Posteriormente, podemos substituir esses dados pela consulta ao banco.
+# Produtos temporários utilizados apenas na página inicial.
+# O cardápio e os detalhes usam os produtos cadastrados no banco.
 PRODUTOS_MOCK = [
     {
         'id': 1,
@@ -87,34 +86,81 @@ def home(request):
 
 
 def detalhe_produto(request, slug):
-    """Exibe os detalhes de um produto pelo slug."""
-    produto = next(
-        (item for item in PRODUTOS_MOCK if item['slug'] == slug),
-        None,
+    """Exibe o produto e suas opções de personalização."""
+    produto = get_object_or_404(
+        Produto.objects.select_related(
+            'categoria'
+        ).prefetch_related(
+            'ingredientes_configurados__ingrediente',
+            'adicionais_disponiveis__adicional',
+            'molhos_disponiveis__molho',
+        ),
+        slug=slug,
+        disponivel=True,
+        categoria__ativo=True,
     )
 
-    if produto is None:
-        raise Http404('Produto não encontrado')
+    # Mantém apenas os ingredientes ativos cadastrados
+    # para este produto.
+    ingredientes = [
+        relacao
+        for relacao in produto.ingredientes_configurados.all()
+        if relacao.ingrediente.ativo
+    ]
+
+    # Mantém apenas os adicionais ativos deste produto.
+    adicionais = [
+        relacao
+        for relacao in produto.adicionais_disponiveis.all()
+        if relacao.adicional.ativo
+    ]
+
+    # Mantém apenas os molhos ativos deste produto.
+    molhos = [
+        relacao
+        for relacao in produto.molhos_disponiveis.all()
+        if relacao.molho.ativo
+    ]
+
+    contexto = {
+        'produto': produto,
+        'ingredientes': ingredientes,
+        'adicionais': adicionais,
+        'molhos': molhos,
+    }
 
     return render(
         request,
         'pedidos/detalhe_produto.html',
-        {'produto': produto},
+        contexto,
     )
 
 
 def cardapio_view(request):
     """Exibe categorias e produtos ativos cadastrados no banco."""
-    categorias = Categoria.objects.filter(ativo=True)
+    categorias = Categoria.objects.filter(
+        ativo=True,
+    ).order_by(
+        'ordem_exibicao',
+        'nome',
+    )
 
     produtos = Produto.objects.filter(
         disponivel=True,
         categoria__ativo=True,
-    ).select_related('categoria')
+    ).select_related(
+        'categoria',
+    ).order_by(
+        'nome',
+    )
 
     contexto = {
         'categorias': categorias,
         'produtos': produtos,
     }
 
-    return render(request, 'app/cardapio.html', contexto)
+    return render(
+        request,
+        'app/cardapio.html',
+        contexto,
+    )
