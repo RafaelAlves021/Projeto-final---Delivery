@@ -1441,9 +1441,9 @@
 .login-rodape a:hover {
   text-decoration: underline;
 }
-=======
+
    PÁGINA DO CARRINHO
-   ========================================================================== */
+
 .carrinho-layout {
   max-width: 1100px;
   margin: 40px auto;
@@ -2018,4 +2018,27 @@
   .cardapio-app-layout {
     padding: 30px 0 60px;
   }
->>>>>>> 04367fe0f2db5ee1ff16eb420c24500be2b1d117
+
+/* FORÇAR COR BRANCA NOS TEXTOS DE AJUDA DOS FORMULÁRIOS */
+.form-login label,
+.form-login .helptext,
+.form-login span,
+.form-login small,
+.form-login ul,
+.form-login li {
+  color: #FFFFFF !important;
+}
+
+.form-login ul {
+  padding-left: 18px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+}
+
+.form-login .helptext {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  margin-bottom: 8px;
+  display: block;
+}

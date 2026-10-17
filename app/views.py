@@ -2,7 +2,7 @@ from django.shortcuts import render, Http404, redirect
 from django.contrib import messages
 from .forms import RegistrationForm, UserUpdateForm, PerfilUpdateForm
 from django.contrib.auth.decorators import login_required
-from .models import Perfil
+from .models import Categoria, Produto, Pedido, ItemPedido, Perfil
 
 PRODUTOS_MOCK = [
     {
@@ -86,26 +86,27 @@ def detalhe_produto(request, slug):
         raise Http404("Produto não encontrado")
     return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
 
-<<<<<<< HEAD
-
-
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Conta criada com sucesso! Faça seu login.')
-            return redirect('login')  # Redireciona para a tela de login
+            return redirect('login')
     else:
         form = RegistrationForm()
     
-    return render(request, 'usuarios/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
 
+def carrinho(request):
+    return render(request, 'pedidos/carrinho.html')
 
 @login_required
 def perfil_view(request):
-    # Garante que o perfil existe caso o utilizador seja antigo
     perfil, created = Perfil.objects.get_or_create(user=request.user)
+    
+    # CORRIGIDO AQUI: usar 'cliente=request.user' em vez de 'user=request.user'
+    pedidos = Pedido.objects.filter(cliente=request.user).order_by('-criado_em')
 
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
@@ -123,12 +124,6 @@ def perfil_view(request):
     context = {
         'user_form': user_form,
         'perfil_form': perfil_form,
+        'pedidos': pedidos,
     }
     return render(request, 'registration/perfil.html', context)
-=======
-def carrinho(request):
-    return render(request, 'pedidos/carrinho.html')
-
-def checkout(request):
-    return render(request, 'pedidos/checkout.html')
->>>>>>> 04367fe0f2db5ee1ff16eb420c24500be2b1d117
