@@ -1,24 +1,24 @@
-<<<<<<< HEAD
-
-from django.shortcuts import render, get_object_or_404
-
-from .models import Produto, Categoria
-
-
-# Produtos temporários utilizados apenas na página inicial.
-# O cardápio e os detalhes usam os produtos cadastrados no banco.
-=======
-from django.shortcuts import render, redirect, Http404
+from django.shortcuts import render, redirect, get_object_or_404, Http404
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import CadastroForm
+
+# Imports dos models e formulários da equipe
+try:
+    from .models import Produto, Categoria
+    from .forms import CadastroForm
+except ImportError:
+    Produto = None
+    Categoria = None
+    CadastroForm = None
+
 
 class LoginComMensagem(SuccessMessageMixin, LoginView):
     template_name = 'registration/login.html'
     success_message = "Login realizado com sucesso!"
 
->>>>>>> origin/main
+
+# Produtos temporários utilizados na página inicial e fallback de desenvolvimento
 PRODUTOS_MOCK = [
     {
         'id': 1,
@@ -90,115 +90,104 @@ PRODUTOS_MOCK = [
 
 
 def home(request):
-<<<<<<< HEAD
-    """Exibe a página inicial com os produtos temporários."""
+    """Exibe a página inicial com busca e produtos."""
+    termo = request.GET.get('busca', '').strip().lower()
+    produtos = PRODUTOS_MOCK
+    if termo:
+        produtos = [
+            p for p in PRODUTOS_MOCK
+            if termo in p['nome'].lower() or termo in p['descricao'].lower()
+        ]
     return render(
         request,
         'pedidos/home.html',
-        {'produtos': PRODUTOS_MOCK},
+        {'produtos': produtos, 'termo_busca': termo}
     )
 
 
 def detalhe_produto(request, slug):
-    """Exibe o produto e suas opções de personalização."""
-    produto = get_object_or_404(
-        Produto.objects.select_related(
-            'categoria'
-        ).prefetch_related(
-            'ingredientes_configurados__ingrediente',
-            'adicionais_disponiveis__adicional',
-            'molhos_disponiveis__molho',
-        ),
-        slug=slug,
-        disponivel=True,
-        categoria__ativo=True,
-    )
+    """
+    Exibe os detalhes do produto.
+    Se o produto existir no banco, traz os dados completos do model.
+    Caso contrário, busca no mock para não travar o front-end.
+    """
+    if Produto:
+        try:
+            produto = get_object_or_404(
+                Produto.objects.select_related('categoria').prefetch_related(
+                    'ingredientes_configurados__ingrediente',
+                    'adicionais_disponiveis__adicional',
+                    'molhos_disponiveis__molho',
+                ),
+                slug=slug,
+                disponivel=True,
+                categoria__ativo=True,
+            )
 
-    # Mantém apenas os ingredientes ativos cadastrados
-    # para este produto.
-    ingredientes = [
-        relacao
-        for relacao in produto.ingredientes_configurados.all()
-        if relacao.ingrediente.ativo
-    ]
+            ingredientes = [
+                rel for rel in produto.ingredientes_configurados.all()
+                if rel.ingrediente.ativo
+            ]
+            adicionais = [
+                rel for rel in produto.adicionais_disponiveis.all()
+                if rel.adicional.ativo
+            ]
+            molhos = [
+                rel for rel in produto.molhos_disponiveis.all()
+                if rel.molho.ativo
+            ]
 
-    # Mantém apenas os adicionais ativos deste produto.
-    adicionais = [
-        relacao
-        for relacao in produto.adicionais_disponiveis.all()
-        if relacao.adicional.ativo
-    ]
+            return render(
+                request,
+                'pedidos/detalhe_produto.html',
+                {
+                    'produto': produto,
+                    'ingredientes': ingredientes,
+                    'adicionais': adicionais,
+                    'molhos': molhos,
+                }
+            )
+        except Exception:
+            pass
 
-    # Mantém apenas os molhos ativos deste produto.
-    molhos = [
-        relacao
-        for relacao in produto.molhos_disponiveis.all()
-        if relacao.molho.ativo
-    ]
-
-    contexto = {
-        'produto': produto,
-        'ingredientes': ingredientes,
-        'adicionais': adicionais,
-        'molhos': molhos,
-    }
-
-    return render(
-        request,
-        'pedidos/detalhe_produto.html',
-        contexto,
-    )
+    # Fallback seguro para o Mock
+    produto_mock = next((p for p in PRODUTOS_MOCK if p['slug'] == slug), None)
+    if not produto_mock:
+        raise Http404("Produto não encontrado")
+    return render(request, 'pedidos/detalhe_produto.html', {'produto': produto_mock})
 
 
 def cardapio_view(request):
     """Exibe categorias e produtos ativos cadastrados no banco."""
-    categorias = Categoria.objects.filter(
-        ativo=True,
-    ).order_by(
-        'ordem_exibicao',
-        'nome',
-    )
+    if not Categoria or not Produto:
+        return redirect('home')
 
-    produtos = Produto.objects.filter(
-        disponivel=True,
-        categoria__ativo=True,
-    ).select_related(
-        'categoria',
-    ).order_by(
-        'nome',
-    )
-
-    contexto = {
-        'categorias': categorias,
-        'produtos': produtos,
-    }
+    categorias = Categoria.objects.filter(ativo=True).order_by('ordem_exibicao', 'nome')
+    produtos = Produto.objects.filter(disponivel=True, categoria__ativo=True).select_related('categoria').order_by('nome')
 
     return render(
         request,
         'app/cardapio.html',
-        contexto,
+        {'categorias': categorias, 'produtos': produtos}
     )
-=======
-    termo = request.GET.get('busca', '').strip().lower()
-    produtos = PRODUTOS_MOCK
-    if termo:
-        produtos = [p for p in PRODUTOS_MOCK if termo in p['nome'].lower() or termo in p['descricao'].lower()]
-    return render(request, 'pedidos/home.html', {'produtos': produtos, 'termo_busca': termo})
 
-def detalhe_produto(request, slug):
-    produto = next((p for p in PRODUTOS_MOCK if p['slug'] == slug), None)
-    if not produto:
-        raise Http404("Produto não encontrado")
-    return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
 
 def carrinho(request):
+    """Exibe a sacola/carrinho de compras."""
     return render(request, 'pedidos/carrinho.html')
 
+
 def checkout(request):
+    """Exibe a tela de identificação, endereço e forma de pagamento."""
     return render(request, 'pedidos/checkout.html')
 
+
 def cadastro(request):
+    """Fluxo de cadastro de novos clientes."""
     if request.user.is_authenticated:
+        return redirect('home')
+
+    if not CadastroForm:
         return redirect('home')
 
     if request.method == 'POST':
@@ -211,4 +200,3 @@ def cadastro(request):
         form = CadastroForm()
 
     return render(request, 'registration/cadastro.html', {'form': form})
->>>>>>> origin/main
