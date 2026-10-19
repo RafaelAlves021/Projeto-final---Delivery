@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 from django.shortcuts import render, get_object_or_404
 
@@ -6,6 +7,18 @@ from .models import Produto, Categoria
 
 # Produtos temporários utilizados apenas na página inicial.
 # O cardápio e os detalhes usam os produtos cadastrados no banco.
+=======
+from django.shortcuts import render, redirect, Http404
+from django.contrib import messages
+from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
+from .forms import CadastroForm
+
+class LoginComMensagem(SuccessMessageMixin, LoginView):
+    template_name = 'registration/login.html'
+    success_message = "Login realizado com sucesso!"
+
+>>>>>>> origin/main
 PRODUTOS_MOCK = [
     {
         'id': 1,
@@ -77,6 +90,7 @@ PRODUTOS_MOCK = [
 
 
 def home(request):
+<<<<<<< HEAD
     """Exibe a página inicial com os produtos temporários."""
     return render(
         request,
@@ -164,3 +178,37 @@ def cardapio_view(request):
         'app/cardapio.html',
         contexto,
     )
+=======
+    termo = request.GET.get('busca', '').strip().lower()
+    produtos = PRODUTOS_MOCK
+    if termo:
+        produtos = [p for p in PRODUTOS_MOCK if termo in p['nome'].lower() or termo in p['descricao'].lower()]
+    return render(request, 'pedidos/home.html', {'produtos': produtos, 'termo_busca': termo})
+
+def detalhe_produto(request, slug):
+    produto = next((p for p in PRODUTOS_MOCK if p['slug'] == slug), None)
+    if not produto:
+        raise Http404("Produto não encontrado")
+    return render(request, 'pedidos/detalhe_produto.html', {'produto': produto})
+
+def carrinho(request):
+    return render(request, 'pedidos/carrinho.html')
+
+def checkout(request):
+    return render(request, 'pedidos/checkout.html')
+
+def cadastro(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CadastroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Cadastro realizado! Faça login para continuar.")
+            return redirect('login')
+    else:
+        form = CadastroForm()
+
+    return render(request, 'registration/cadastro.html', {'form': form})
+>>>>>>> origin/main

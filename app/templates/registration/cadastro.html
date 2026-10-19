@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastre-se | BURGA RUA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <header class="header-site">
+    <div class="container header-site__wrapper">
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+            <path d="M4 15h16"></path>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+      <a href="{% url 'home' %}" class="btn btn--secundario btn-continuar-compras">← Voltar ao cardápio</a>
+    </div>
+  </header>
+
+  <main class="login-layout">
+    <section class="login-card" aria-label="Formulário de cadastro">
+      <span class="badge-rotulo">Novo por aqui?</span>
+      <h2>Crie sua conta</h2>
+      <p class="login-sub">Leva menos de um minuto e você acompanha seus pedidos.</p>
+
+      {% if form.non_field_errors %}
+        <div class="alerta alerta--error" role="alert">
+          {% for erro in form.non_field_errors %}{{ erro }}{% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="campo-grupo">
+          <label for="id_first_name">Nome</label>
+          <input type="text" name="first_name" id="id_first_name" class="campo-input"
+                 value="{{ form.first_name.value|default:'' }}" placeholder="Como podemos te chamar?"
+                 autocomplete="given-name" required autofocus>
+          {% for erro in form.first_name.errors %}<span class="campo-erro">{{ erro }}</span>{% endfor %}
+        </div>
+
+        <div class="campo-grupo">
+          <label for="id_username">Usuário</label>
+          <input type="text" name="username" id="id_username" class="campo-input"
+                 value="{{ form.username.value|default:'' }}" placeholder="Escolha um nome de usuário"
+                 autocomplete="username" required>
+          {% for erro in form.username.errors %}<span class="campo-erro">{{ erro }}</span>{% endfor %}
+        </div>
+
+        <div class="campo-grupo">
+          <label for="id_email">E-mail</label>
+          <input type="email" name="email" id="id_email" class="campo-input"
+                 value="{{ form.email.value|default:'' }}" placeholder="voce@email.com"
+                 autocomplete="email" required>
+          {% for erro in form.email.errors %}<span class="campo-erro">{{ erro }}</span>{% endfor %}
+        </div>
+
+        <div class="campo-grupo">
+          <label for="id_password1">Senha</label>
+          <input type="password" name="password1" id="id_password1" class="campo-input"
+                 placeholder="Mínimo de 8 caracteres" autocomplete="new-password" required>
+          {% for erro in form.password1.errors %}<span class="campo-erro">{{ erro }}</span>{% endfor %}
+        </div>
+
+        <div class="campo-grupo">
+          <label for="id_password2">Confirmar senha</label>
+          <input type="password" name="password2" id="id_password2" class="campo-input"
+                 placeholder="Repita a senha" autocomplete="new-password" required>
+          {% for erro in form.password2.errors %}<span class="campo-erro">{{ erro }}</span>{% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn--primario login-botao">Criar conta</button>
+      </form>
+
+      <p class="login-rodape">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </section>
+  </main>
+
+</body>
+</html>
