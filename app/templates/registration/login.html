@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar | BURGA RUA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <header class="header-site">
+    <div class="container header-site__wrapper">
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+            <path d="M4 15h16"></path>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+      <a href="{% url 'home' %}" class="btn btn--secundario btn-continuar-compras">← Voltar ao cardápio</a>
+    </div>
+  </header>
+
+  <main class="login-layout">
+    <section class="login-card" aria-label="Formulário de login">
+      <span class="badge-rotulo">Acesso</span>
+      <h2>Entrar na sua conta</h2>
+      <p class="login-sub">Acompanhe seus pedidos e finalize compras mais rápido.</p>
+
+      {% if form.errors %}
+        <div class="alerta alerta--error" role="alert">Usuário ou senha inválidos. Tente novamente.</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="campo-grupo">
+          <label for="id_username">Usuário</label>
+          <input type="text" name="username" id="id_username" class="campo-input"
+                 value="{{ form.username.value|default:'' }}" placeholder="Seu usuário"
+                 autocomplete="username" required autofocus>
+        </div>
+
+        <div class="campo-grupo">
+          <label for="id_password">Senha</label>
+          <input type="password" name="password" id="id_password" class="campo-input"
+                 placeholder="Sua senha" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn btn--primario login-botao">Entrar</button>
+      </form>
+
+      <p class="login-rodape">Ainda não tem conta? <a href="#">Cadastre-se</a></p>
+    </section>
+  </main>
+
+</body>
+</html>
