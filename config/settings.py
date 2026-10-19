@@ -119,3 +119,9 @@ MAILERS = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Redireciona para a página inicial ('home') logo após fazer o login com sucesso
+LOGIN_REDIRECT_URL = 'home'
+
+# Redireciona para a página inicial logo após fazer logout
+LOGOUT_REDIRECT_URL = 'home'
