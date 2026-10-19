@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 /* =========================================================
    BURGA RUA — CARRINHO DE COMPRAS
    ========================================================= */
@@ -1122,4 +1120,3 @@ if (campoObs) {
     localStorage.setItem('burga_obs_pedido', campoObs.value);
   });
 }
->>>>>>> origin/main

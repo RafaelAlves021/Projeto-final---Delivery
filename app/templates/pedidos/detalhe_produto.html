@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -160,9 +159,11 @@
                         <p>Escolha os ingredientes, adicionais e molhos.</p>
                     </div>
 
+                    <!-- INGREDIENTES -->
                     {% if ingredientes %}
                         <fieldset class="personalizacao-grupo">
                             <legend>🥬 Ingredientes</legend>
+
                             <p class="personalizacao-ajuda">
                                 Desmarque o que você não quer no seu lanche.
                             </p>
@@ -170,6 +171,23 @@
                             <div class="personalizacao-opcoes">
                                 {% for relacao in ingredientes %}
                                     <label class="personalizacao-opcao">
+
+                                        {% if relacao.ingrediente.imagem_url %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="{{ relacao.ingrediente.imagem_url }}"
+                                                alt="{{ relacao.ingrediente.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% else %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="https://placehold.co/100x100/f5e7d0/573b2a?text=Ingrediente"
+                                                alt="Imagem de {{ relacao.ingrediente.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% endif %}
+
                                         <input
                                             type="checkbox"
                                             name="ingredientes"
@@ -194,9 +212,11 @@
                         </fieldset>
                     {% endif %}
 
+                    <!-- ADICIONAIS -->
                     {% if adicionais %}
                         <fieldset class="personalizacao-grupo">
                             <legend>🍳 Adicionais</legend>
+
                             <p class="personalizacao-ajuda">
                                 Adicione um toque extra ao seu pedido.
                             </p>
@@ -204,6 +224,23 @@
                             <div class="personalizacao-opcoes">
                                 {% for relacao in adicionais %}
                                     <label class="personalizacao-opcao">
+
+                                        {% if relacao.adicional.imagem_url %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="{{ relacao.adicional.imagem_url }}"
+                                                alt="{{ relacao.adicional.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% else %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="https://placehold.co/100x100/f5e7d0/573b2a?text=Adicional"
+                                                alt="Imagem de {{ relacao.adicional.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% endif %}
+
                                         <input
                                             type="checkbox"
                                             name="adicionais"
@@ -229,9 +266,11 @@
                         </fieldset>
                     {% endif %}
 
+                    <!-- MOLHOS -->
                     {% if molhos %}
                         <fieldset class="personalizacao-grupo">
                             <legend>🥫 Molhos</legend>
+
                             <p class="personalizacao-ajuda">
                                 Escolha os molhos que combinam com você.
                             </p>
@@ -239,6 +278,23 @@
                             <div class="personalizacao-opcoes">
                                 {% for relacao in molhos %}
                                     <label class="personalizacao-opcao">
+
+                                        {% if relacao.molho.imagem_url %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="{{ relacao.molho.imagem_url }}"
+                                                alt="{{ relacao.molho.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% else %}
+                                            <img
+                                                class="personalizacao-opcao__imagem"
+                                                src="https://placehold.co/100x100/f5e7d0/573b2a?text=Molho"
+                                                alt="Imagem de {{ relacao.molho.nome }}"
+                                                loading="lazy"
+                                            >
+                                        {% endif %}
+
                                         <input
                                             type="checkbox"
                                             name="molhos"
@@ -273,12 +329,11 @@
                     {% if not ingredientes and not adicionais and not molhos %}
                         <div class="personalizacao-vazia">
                             <strong>Este produto ainda não tem opções cadastradas.</strong>
-                            <p>
-                                Em breve você poderá personalizá-lo por aqui.
-                            </p>
+                            <p>Em breve você poderá personalizá-lo por aqui.</p>
                         </div>
                     {% endif %}
 
+                    <!-- OBSERVAÇÕES -->
                     <div class="personalizacao-grupo">
                         <label for="observacoesPersonalizacao">
                             <strong>📝 Alguma observação?</strong>
@@ -314,6 +369,7 @@
                     </div>
                 </div>
 
+                <!-- CARRINHO -->
                 <div class="detalhe-acoes">
                     {% if produto.disponivel %}
                         <button
