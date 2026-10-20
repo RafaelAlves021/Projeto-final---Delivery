@@ -1,14 +1,25 @@
 from django.urls import path
-from django.views.generic import TemplateView
+from django.contrib.auth.views import LoginView, LogoutView
 
 from . import views
 
 
 urlpatterns = [
-    # Página inicial da BURGA RUA
     path('', views.home, name='home'),
-    path('produto/<slug:slug>/', views.detalhe_produto, name='detalhe_produto'),
     path('cardapio/', views.home, name='cardapio'),
-    path('checkout/', TemplateView.as_view(template_name='pedidos/home.html'), name='checkout'),
-    path('login/', TemplateView.as_view(template_name='pedidos/home.html'), name='login'),
+    path('produto/<slug:slug>/', views.detalhe_produto, name='detalhe_produto'),
+    path('carrinho/', views.carrinho, name='carrinho'),
+    path('checkout/', views.checkout, name='checkout'),
+    path('cadastro/', views.cadastro, name='cadastro'),
+    path('perfil/', views.perfil, name='perfil'),  # <-- A ROTA NOVA AQUI
+    path(
+        'login/',
+        LoginView.as_view(template_name='login.html'),
+        name='login',
+    ),
+    path(
+        'logout/',
+        LogoutView.as_view(next_page='home'),
+        name='logout',
+    ),
 ]

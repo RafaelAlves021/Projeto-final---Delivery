@@ -1,12 +1,40 @@
-
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import Produto, Categoria
+from .forms import CadastroForm, EditarPerfilForm
 
 
 def home(request):
-    """Exibe o cardápio cadastrado no banco de dados."""
+    """Página inicial: exibe o cardápio vindo do banco."""
     return cardapio_view(request)
+
+
+def cardapio_view(request):
+    """Exibe categorias e produtos ativos cadastrados no banco."""
+    categorias = Categoria.objects.filter(
+        ativo=True,
+    ).order_by(
+        'ordem_exibicao',
+        'nome',
+    )
+
+    produtos = Produto.objects.filter(
+        disponivel=True,
+        categoria__ativo=True,
+    ).select_related(
+        'categoria',
+    ).order_by(
+        'nome',
+    )
+
+    contexto = {
+        'categorias': categorias,
+        'produtos': produtos,
+    }
+
+    return render(request, 'cardapio.html', contexto)
 
 
 def detalhe_produto(request, slug):
@@ -49,38 +77,49 @@ def detalhe_produto(request, slug):
         'molhos': molhos,
     }
 
-    return render(
-        request,
-        'pedidos/detalhe_produto.html',
-        contexto,
-    )
+    return render(request, 'detalhe_produto.html', contexto)
 
 
-def cardapio_view(request):
-    """Exibe categorias e produtos ativos cadastrados no banco."""
-    categorias = Categoria.objects.filter(
-        ativo=True,
-    ).order_by(
-        'ordem_exibicao',
-        'nome',
-    )
+def carrinho(request):
+    """Página do carrinho (itens vêm do localStorage via JS)."""
+    return render(request, 'carrinho.html')
 
-    produtos = Produto.objects.filter(
-        disponivel=True,
-        categoria__ativo=True,
-    ).select_related(
-        'categoria',
-    ).order_by(
-        'nome',
-    )
 
-    contexto = {
-        'categorias': categorias,
-        'produtos': produtos,
-    }
+def checkout(request):
+    """Página de checkout."""
+    return render(request, 'checkout.html')
 
-    return render(
-        request,
-        'app/cardapio.html',
-        contexto,
-    )
+
+def cadastro(request):
+    """Cadastro de novo usuário."""
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CadastroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Cadastro realizado! Faça login para continuar.",
+            )
+            return redirect('login')
+    else:
+        form = CadastroForm()
+
+    return render(request, 'cadastro.html', {'form': form})
+
+
+@login_required
+def perfil(request):
+    """Permite que o usuário logado edite seus próprios dados."""
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Seus dados foram atualizados com sucesso!')
+            return redirect('perfil')
+    else:
+        form = EditarPerfilForm(instance=request.user)
+    
+    return render(request, 'perfil.html', {'form': form})

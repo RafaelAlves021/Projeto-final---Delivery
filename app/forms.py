@@ -16,3 +16,12 @@ class CadastroForm(UserCreationForm):
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Este e-mail já está cadastrado.")
         return email
+
+class EditarPerfilForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'email')
+        labels = {
+            'first_name': 'Nome Completo',
+            'email': 'E-mail',
+        }
