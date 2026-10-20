@@ -42,15 +42,8 @@
                 <span class="logo-marca__nome">BURGA RUA</span>
             </a>
 
-            <nav aria-label="Navegação principal">
-                <ul class="nav-desktop">
-                    <li><a href="{% url 'home' %}">Início</a></li>
-                    <li><a href="{% url 'cardapio' %}" aria-current="page">Cardápio</a></li>
-                </ul>
-            </nav>
-
             <div class="header-acoes">
-                <a href="{% url 'cardapio' %}" class="btn btn--secundario detalhe-voltar-header">
+                <a href="{% url 'home' %}" class="btn btn--secundario detalhe-voltar-header">
                     ← Voltar ao cardápio
                 </a>
             </div>
@@ -62,8 +55,6 @@
 
         <nav class="detalhe-breadcrumb" aria-label="Você está em">
             <a href="{% url 'home' %}">Início</a>
-            <span aria-hidden="true">/</span>
-            <a href="{% url 'cardapio' %}">Cardápio</a>
             <span aria-hidden="true">/</span>
             <span aria-current="page">{{ produto.nome }}</span>
         </nav>
@@ -103,7 +94,7 @@
 
                 <div class="detalhe-info-topo">
                     <span class="detalhe-categoria">
-                        {{ produto.categoria.nome }}
+                        {{ produto.categoria.nome|default:produto.categoria }}
                     </span>
 
                     <span class="detalhe-disponibilidade">
@@ -137,8 +128,8 @@
                         {% else %}
                             <strong class="detalhe-preco"
                                     id="detalhePreco"
-                                    data-preco-base="{{ produto.preco|stringformat:'s' }}">
-                                R$ {{ produto.preco|floatformat:2 }}
+                                    data-preco-base="{% if produto.preco_float %}{{ produto.preco_float|stringformat:'s' }}{% else %}{{ produto.preco|stringformat:'s' }}{% endif %}">
+                                R$ {{ produto.preco }}
                             </strong>
                         {% endif %}
                     </div>
@@ -371,13 +362,13 @@
 
                 <!-- CARRINHO -->
                 <div class="detalhe-acoes">
-                    {% if produto.disponivel %}
+                    {% if produto.disponivel or produto.disponivel is None %}
                         <button
                             type="button"
                             class="btn btn--primario btn-adicionar-produto detalhe-btn-adicionar"
                             data-id="{{ produto.id }}"
                             data-nome="{{ produto.nome }}"
-                            data-preco="{% if produto.preco_promocional %}{{ produto.preco_promocional|stringformat:'s' }}{% else %}{{ produto.preco|stringformat:'s' }}{% endif %}"
+                            data-preco="{% if produto.preco_promocional %}{{ produto.preco_promocional|stringformat:'s' }}{% elif produto.preco_float %}{{ produto.preco_float|stringformat:'s' }}{% else %}{{ produto.preco|stringformat:'s' }}{% endif %}"
                             data-imagem="{% if produto.imagem_url %}{{ produto.imagem_url }}{% elif produto.imagem %}{{ produto.imagem.url }}{% endif %}"
                             aria-label="Adicionar {{ produto.nome }} personalizado ao carrinho"
                         >
@@ -392,7 +383,7 @@
                         </button>
                     {% endif %}
 
-                    <a href="{% url 'cardapio' %}" class="detalhe-continuar">
+                    <a href="{% url 'home' %}" class="detalhe-continuar">
                         ← Continuar explorando o cardápio
                     </a>
                 </div>
@@ -403,7 +394,7 @@
         <section class="detalhe-rodape-chamada">
             <span class="badge-rotulo">BATEU A FOME?</span>
             <p>Escolha seus favoritos e monte seu pedido.</p>
-            <a href="{% url 'cardapio' %}" class="detalhe-link-cardapio">
+            <a href="{% url 'home' %}" class="detalhe-link-cardapio">
                 Ver outros produtos →
             </a>
         </section>
