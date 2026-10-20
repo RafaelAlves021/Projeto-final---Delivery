@@ -1681,3 +1681,50 @@
         height: 52px;
     }
 }
+
+/* ==========================================================================
+   CORREÇÃO DO CARRINHO (Imagens e Botão)
+   ========================================================================== */
+
+/* Limita o tamanho da imagem dentro da gaveta do carrinho */
+.item-carrinho__imagem {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--raio-sm);
+    flex-shrink: 0;
+}
+
+/* Garante que a linha do item do carrinho não quebre o layout */
+.item-carrinho {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Arruma o botão "+ Adicionar" que estava cortado */
+.btn-adicionar-produto {
+    width: auto;
+    min-width: 48px;
+    height: 40px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cor-destaque);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--fonte-titulo);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(230, 58, 39, 0.25);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-adicionar-produto:hover {
+    background: var(--cor-destaque-hover);
+    transform: translateY(-2px);
+}

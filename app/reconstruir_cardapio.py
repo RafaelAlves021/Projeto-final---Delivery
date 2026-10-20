@@ -45,27 +45,25 @@ CATEGORIAS = [
 
 # ============================================================
 # IMAGENS REAIS (Unsplash) POR PRODUTO
-# Cada slug tem uma URL direta de foto do Unsplash.
-# Fotos de comida de verdade, sem API key, domínio estável.
 # ============================================================
 
 IMAGENS = {
     # ---------- HAMBÚRGUERES ----------
     "smash-classico-duplo": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80",
-    "bacon-melt-trufado": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&auto=format&fit=crop&q=80",
+    "bacon-melt-trufado": "https://images.unsplash.com/photo-1586816001966-79b736744398?w=600&auto=format&fit=crop&q=80",
     "rua-classico": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80",
     "cheddar-bacon": "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&auto=format&fit=crop&q=80",
-    "barbecue-smash": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&auto=format&fit=crop&q=80",
+    "barbecue-smash": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&auto=format&fit=crop&q=80",
     "duplo-cheddar": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&auto=format&fit=crop&q=80",
     "smash-picles": "https://images.unsplash.com/photo-1550317138-10000687a72b?w=600&auto=format&fit=crop&q=80",
     "triplo-rua": "https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=600&auto=format&fit=crop&q=80",
     "crispy-burger": "https://images.unsplash.com/photo-1603064752734-4c48eff53d05?w=600&auto=format&fit=crop&q=80",
     "jalapeno-burger": "https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?w=600&auto=format&fit=crop&q=80",
-    "onion-burger": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&auto=format&fit=crop&q=80",
+    "onion-burger": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&auto=format&fit=crop&q=80",
     "melt-duplo": "https://images.unsplash.com/photo-1554433607-66b5efe9d304?w=600&auto=format&fit=crop&q=80",
     "frango-burger-rua": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&auto=format&fit=crop&q=80",
     "cheese-salada": "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=600&auto=format&fit=crop&q=80",
-    "bacon-cebola": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&auto=format&fit=crop&q=80",
+    "bacon-cebola": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&auto=format&fit=crop&q=80",
 
     # ---------- BATATAS ----------
     "batata-rustica-alecrim": "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=600&auto=format&fit=crop&q=80",
@@ -75,7 +73,7 @@ IMAGENS = {
     "onion-rings": "https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&auto=format&fit=crop&q=80",
     "nuggets-6": "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&auto=format&fit=crop&q=80",
     "nuggets-10": "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=600&auto=format&fit=crop&q=80",
-    "batata-canoinha": "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80",
+    "batata-canoinha": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=600&auto=format&fit=crop&q=80",
     "polenta-crocante": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=600&auto=format&fit=crop&q=80",
     "mix-fritas": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=600&auto=format&fit=crop&q=80",
 
