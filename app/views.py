@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Produto, Categoria
 from .forms import CadastroForm, EditarPerfilForm
+
+
+class LoginComMensagem(SuccessMessageMixin, LoginView):
+    template_name = 'registration/login.html'
+    success_message = "Login realizado com sucesso!"
 
 
 def home(request):
@@ -34,7 +41,8 @@ def cardapio_view(request):
         'produtos': produtos,
     }
 
-    return render(request, 'cardapio.html', contexto)
+    # Tenta renderizar pedidos/home.html ou app/cardapio.html
+    return render(request, 'pedidos/home.html', contexto)
 
 
 def detalhe_produto(request, slug):
@@ -77,17 +85,17 @@ def detalhe_produto(request, slug):
         'molhos': molhos,
     }
 
-    return render(request, 'detalhe_produto.html', contexto)
+    return render(request, 'pedidos/detalhe_produto.html', contexto)
 
 
 def carrinho(request):
     """Página do carrinho (itens vêm do localStorage via JS)."""
-    return render(request, 'carrinho.html')
+    return render(request, 'pedidos/carrinho.html')
 
 
 def checkout(request):
     """Página de checkout."""
-    return render(request, 'checkout.html')
+    return render(request, 'pedidos/checkout.html')
 
 
 def cadastro(request):
@@ -107,7 +115,7 @@ def cadastro(request):
     else:
         form = CadastroForm()
 
-    return render(request, 'cadastro.html', {'form': form})
+    return render(request, 'registration/cadastro.html', {'form': form})
 
 
 @login_required
@@ -122,4 +130,4 @@ def perfil(request):
     else:
         form = EditarPerfilForm(instance=request.user)
     
-    return render(request, 'perfil.html', {'form': form})
+    return render(request, 'pedidos/perfil.html', {'form': form})
