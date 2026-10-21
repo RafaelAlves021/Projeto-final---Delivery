@@ -14,12 +14,14 @@ class LoginComMensagem(SuccessMessageMixin, LoginView):
 
 
 def home(request):
-    """Página inicial: exibe o cardápio vindo do banco."""
+    """Página inicial: exibe o cardápio com suporte a busca."""
     return cardapio_view(request)
 
 
 def cardapio_view(request):
-    """Exibe categorias e produtos ativos cadastrados no banco."""
+    """Exibe categorias e produtos ativos cadastrados no banco de dados."""
+    termo_busca = request.GET.get('busca', '').strip()
+
     categorias = Categoria.objects.filter(
         ativo=True,
     ).order_by(
@@ -36,13 +38,16 @@ def cardapio_view(request):
         'nome',
     )
 
+    if termo_busca:
+        produtos = produtos.filter(nome__icontains=termo_busca)
+
     contexto = {
         'categorias': categorias,
         'produtos': produtos,
+        'termo_busca': termo_busca,
     }
 
-    # Tenta renderizar pedidos/home.html ou app/cardapio.html
-    return render(request, 'pedidos/home.html', contexto)
+    return render(request, 'home.html', contexto)
 
 
 def detalhe_produto(request, slug):
@@ -85,17 +90,17 @@ def detalhe_produto(request, slug):
         'molhos': molhos,
     }
 
-    return render(request, 'pedidos/detalhe_produto.html', contexto)
+    return render(request, 'detalhe_produto.html', contexto)
 
 
 def carrinho(request):
-    """Página do carrinho (itens vêm do localStorage via JS)."""
-    return render(request, 'pedidos/carrinho.html')
+    """Página do carrinho (itens carregados via JavaScript)."""
+    return render(request, 'carrinho.html')
 
 
 def checkout(request):
-    """Página de checkout."""
-    return render(request, 'pedidos/checkout.html')
+    """Página de checkout para finalizar pedido."""
+    return render(request, 'checkout.html')
 
 
 def cadastro(request):
@@ -120,7 +125,7 @@ def cadastro(request):
 
 @login_required
 def perfil(request):
-    """Permite que o usuário logado edite seus próprios dados."""
+    """Permite que o usuário autenticado edite os seus dados."""
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -129,5 +134,5 @@ def perfil(request):
             return redirect('perfil')
     else:
         form = EditarPerfilForm(instance=request.user)
-    
-    return render(request, 'pedidos/perfil.html', {'form': form})
+
+    return render(request, 'perfil.html', {'form': form})

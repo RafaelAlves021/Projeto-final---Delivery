@@ -2,7 +2,7 @@
    BURGA RUA — CARRINHO DE COMPRAS
    ========================================================= */
 
-   (() => {
+(() => {
     "use strict";
 
     const CHAVE_CARRINHO = "burga_carrinho_premium";
@@ -129,7 +129,6 @@
             return;
         }
 
-        // Fallback: cria um toast temporário no canto da tela.
         let aviso = document.getElementById("toastDetalheProduto");
 
         if (!aviso) {
@@ -194,8 +193,8 @@
         );
 
         svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("width", "16");
-        svg.setAttribute("height", "16");
+        svg.setAttribute("width", "18");
+        svg.setAttribute("height", "18");
         svg.setAttribute("fill", "none");
         svg.setAttribute("stroke", "currentColor");
         svg.setAttribute("stroke-width", "2");
@@ -250,17 +249,14 @@
         if (totalTexto) totalTexto.textContent = formatarPreco(total);
         if (mobileTotal) mobileTotal.textContent = formatarPreco(total);
 
-        // Frete grátis a partir de R$ 50.
+        // Frete grátis a partir de R$ 50
         if (freteTexto && barraFrete) {
             if (total >= META_FRETE_GRATIS) {
-                freteTexto.textContent =
-                    "Parabéns! Você ganhou frete grátis!";
-
+                freteTexto.textContent = "Parabéns! Você ganhou frete grátis!";
                 barraFrete.style.width = "100%";
                 barraFrete.style.background = "#2E7D32";
             } else {
                 const restante = META_FRETE_GRATIS - total;
-
                 const percentual = Math.min(
                     100,
                     (total / META_FRETE_GRATIS) * 100
@@ -274,7 +270,6 @@
             }
         }
 
-        // Se a página não tiver gaveta, atualiza só os contadores.
         if (!lista) {
             atualizarBotoesCards();
             atualizarPaginaCarrinho();
@@ -286,7 +281,6 @@
 
         if (carrinho.length === 0) {
             const vazio = document.createElement("div");
-
             vazio.className = "carrinho-vazio";
             vazio.textContent =
                 "Sua sacola está vazia. Adicione um produto para começar.";
@@ -304,7 +298,6 @@
 
             if (item.imagem) {
                 const imagem = document.createElement("img");
-
                 imagem.className = "item-carrinho__imagem";
                 imagem.src = item.imagem;
                 imagem.alt = item.nome;
@@ -351,10 +344,8 @@
 
             if (escolhas.length) {
                 const detalhes = document.createElement("small");
-
                 detalhes.className = "item-carrinho__personalizacao";
                 detalhes.textContent = escolhas.join(" • ");
-
                 informacoes.appendChild(detalhes);
             }
 
@@ -391,18 +382,9 @@
             const remover = document.createElement("button");
             remover.type = "button";
             remover.className = "btn-carrinho-remover";
-
-            remover.setAttribute(
-                "aria-label",
-                `Remover ${item.nome} do carrinho`
-            );
-
+            remover.setAttribute("aria-label", `Remover ${item.nome} do carrinho`);
             remover.title = "Remover produto";
-
-            const textoRemover = document.createElement("span");
-            textoRemover.textContent = "Remover";
-
-            remover.append(criarIconeLixeira(), textoRemover);
+            remover.appendChild(criarIconeLixeira());
 
             remover.addEventListener("click", () => {
                 removerItem(item.chave || item.id);
@@ -453,28 +435,28 @@
     // -----------------------------------------------------
 
     function atualizarPaginaCarrinho() {
-        const lista = document.getElementById("carrinhoPaginaLista");
+        const lista = document.getElementById("carrinhoPaginaLista") || document.getElementById("carrinhoItensLista");
 
         if (!lista) return;
 
-        const contador = document.getElementById("carrinhoPaginaContador");
-        const resumoSubtotal = document.getElementById("resumoSubtotal");
-        const resumoFrete = document.getElementById("resumoFrete");
-        const resumoTotal = document.getElementById("resumoTotal");
+        const contador = document.getElementById("carrinhoPaginaContador") || document.getElementById("carrinhoQtdTexto");
+        const resumoSubtotal = document.getElementById("resumoSubtotal") || document.getElementById("carrinhoSubtotalValor");
+        const resumoFrete = document.getElementById("resumoFrete") || document.getElementById("carrinhoFreteValor");
+        const resumoTotal = document.getElementById("resumoTotal") || document.getElementById("carrinhoTotalGeral");
 
         const quantidade = obterQuantidade();
         const subtotal = obterTotal();
 
         if (contador) {
-            contador.textContent = `${quantidade} item(ns) adicionados`;
+            contador.textContent = `${quantidade} item(ns) adicionado(s)`;
         }
 
-        const frete = subtotal >= META_FRETE_GRATIS ? 0 : 8;
+        const frete = subtotal >= META_FRETE_GRATIS || subtotal === 0 ? 0 : 8;
         const total = subtotal + frete;
 
         if (resumoSubtotal) resumoSubtotal.textContent = formatarPreco(subtotal);
         if (resumoFrete) {
-            resumoFrete.textContent = frete === 0
+            resumoFrete.textContent = frete === 0 && subtotal > 0
                 ? "Grátis"
                 : formatarPreco(frete);
         }
@@ -484,10 +466,8 @@
 
         if (carrinho.length === 0) {
             const vazio = document.createElement("div");
-
             vazio.className = "carrinho-vazio";
             vazio.textContent = "O seu carrinho está vazio.";
-
             lista.appendChild(vazio);
             return;
         }
@@ -495,6 +475,14 @@
         carrinho.forEach(item => {
             const linha = document.createElement("div");
             linha.className = "item-linha";
+
+            if (item.imagem) {
+                const img = document.createElement("img");
+                img.className = "item-carrinho__imagem";
+                img.src = item.imagem;
+                img.alt = item.nome;
+                linha.appendChild(img);
+            }
 
             const dados = document.createElement("div");
             dados.className = "item-linha__dados";
@@ -530,9 +518,18 @@
                 ajustarQuantidade(item.chave || item.id, 1);
             });
 
-            controles.append(menos, qtd, mais);
+            const remover = document.createElement("button");
+            remover.type = "button";
+            remover.className = "btn-carrinho-remover";
+            remover.setAttribute("aria-label", `Remover ${item.nome}`);
+            remover.title = "Remover produto";
+            remover.appendChild(criarIconeLixeira());
+            remover.addEventListener("click", () => {
+                removerItem(item.chave || item.id);
+            });
 
-            linha.append(dados, controles);
+            controles.append(menos, qtd, mais);
+            linha.append(dados, controles, remover);
             lista.appendChild(linha);
         });
     }
@@ -542,21 +539,21 @@
     // -----------------------------------------------------
 
     function atualizarCheckout() {
-        const subtotalEl = document.getElementById("checkoutSubtotal");
+        const subtotalEl = document.getElementById("checkoutSubtotal") || document.getElementById("checkoutSubtotalValor");
 
         if (!subtotalEl) return;
 
-        const freteEl = document.getElementById("checkoutFrete");
-        const totalEl = document.getElementById("checkoutTotal");
+        const freteEl = document.getElementById("checkoutFrete") || document.getElementById("checkoutFreteValor");
+        const totalEl = document.getElementById("checkoutTotal") || document.getElementById("checkoutTotalGeral");
 
         const subtotal = obterTotal();
-        const frete = subtotal >= META_FRETE_GRATIS ? 0 : 8;
+        const frete = subtotal >= META_FRETE_GRATIS || subtotal === 0 ? 0 : 8;
         const total = subtotal + frete;
 
         subtotalEl.textContent = formatarPreco(subtotal);
 
         if (freteEl) {
-            freteEl.textContent = frete === 0
+            freteEl.textContent = frete === 0 && subtotal > 0
                 ? "Grátis"
                 : formatarPreco(frete);
         }
@@ -635,8 +632,6 @@
                 ? personalizacao
                 : {};
 
-        // Combina ID e personalização para separar versões diferentes
-        // do mesmo produto no carrinho.
         const assinatura = JSON.stringify(
             escolhas,
             Object.keys(escolhas).sort()
@@ -664,6 +659,9 @@
 
         renderizarCarrinho();
         mostrarToast(`${nomeConvertido} adicionado à sacola!`);
+        
+        // Abre automaticamente a gaveta lateral ao adicionar qualquer produto
+        abrirCarrinho();
     }
 
     // -----------------------------------------------------
@@ -683,7 +681,7 @@
         const fechar = document.getElementById("btnFecharCarrinho");
         const overlay = document.getElementById("carrinhoOverlay");
         const abrirPromo = document.getElementById("btnAbrirCarrinhoPromo");
-        const abrirMobile = document.getElementById("btnAbrirCarrinhoMobile");
+        const abrirMobile = document.getElementById("btnAbrirCarrinhoMobile") || document.getElementById("btnMobileVerSacola");
 
         if (abrir) abrir.addEventListener("click", abrirCarrinho);
         if (fechar) fechar.addEventListener("click", fecharCarrinho);
@@ -691,7 +689,6 @@
         if (abrirPromo) abrirPromo.addEventListener("click", abrirCarrinho);
         if (abrirMobile) abrirMobile.addEventListener("click", abrirCarrinho);
 
-        // Delegação de eventos: funciona em qualquer página.
         document.addEventListener("click", evento => {
             const botao = evento.target.closest(".btn-adicionar-produto");
 
@@ -718,7 +715,6 @@
                 document.querySelector(".detalhe-imagem")?.src ||
                 "";
 
-            // Lê personalização se o template disponibilizar os campos.
             const personalizacao = {
                 ingredientes: Array.from(
                     document.querySelectorAll(
@@ -777,7 +773,6 @@
             );
         });
 
-        // Botões de + e − dentro dos cards (home.html).
         document.querySelectorAll(".card-seletor-qty").forEach(seletor => {
             const card = seletor.closest(".card-produto");
 
@@ -814,7 +809,6 @@
             }
         });
 
-        // Botão do combo promocional (se existir na página).
         const combo = document.getElementById("btnAdicionarCombo");
 
         if (combo) {
@@ -827,7 +821,6 @@
             });
         }
 
-        // Animações de entrada.
         if ("IntersectionObserver" in window) {
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {

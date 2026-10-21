@@ -4,91 +4,339 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seu Carrinho | BURGA RUA</title>
-  
+  <title>Seu Carrinho | BURGA RUA Delivery</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
+
+  <style>
+    body {
+      background-color: #faf7f2;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carrinho-header {
+      background: #242220;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .carrinho-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .carrinho-logo__badge {
+      background: #e53935;
+      padding: 6px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-voltar {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 20px;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-voltar:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .carrinho-main {
+      flex: 1;
+      padding: 40px 16px;
+    }
+
+    .carrinho-grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .carrinho-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-painel {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+      box-sizing: border-box;
+    }
+
+    .carrinho-tag {
+      background: #fde8e8;
+      color: #c53030;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .carrinho-titulo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: #111;
+    }
+
+    .carrinho-subtitulo {
+      font-size: 0.92rem;
+      color: #666;
+      margin: 0 0 24px;
+    }
+
+    /* Lista de itens carregada dinamicamente via JS */
+    #carrinhoItensLista {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .item-carrinho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 16px;
+    }
+
+    .item-carrinho:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .carrinho-vazio-aviso {
+      text-align: center;
+      padding: 40px 20px;
+      color: #718096;
+    }
+
+    .carrinho-vazio-aviso svg {
+      margin-bottom: 12px;
+      stroke: #a0aec0;
+    }
+
+    /* Observação para a Cozinha */
+    .obs-textarea {
+      width: 100%;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: #2d3748;
+      background: #fcfcfc;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 85px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .obs-textarea:focus {
+      border-color: #e53935;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
+    }
+
+    /* Resumo Lateral */
+    .resumo-titulo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 0 0 20px;
+      color: #111;
+    }
+
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #4a5568;
+      margin-bottom: 14px;
+    }
+
+    .resumo-linha strong {
+      color: #1a202c;
+    }
+
+    .resumo-divisor {
+      border-top: 1px dashed #e2e8f0;
+      margin: 16px 0;
+    }
+
+    .resumo-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 24px;
+    }
+
+    .resumo-total-valor {
+      color: #e53935;
+      font-size: 1.35rem;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      background: #e53935;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      font-family: inherit;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      box-sizing: border-box;
+      box-shadow: 0 4px 14px rgba(229, 57, 53, 0.3);
+    }
+
+    .btn-checkout:hover {
+      background: #d32f2f;
+      transform: translateY(-1px);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="header-site">
-    <div class="container header-site__wrapper">
-      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
-        <div class="logo-marca__icone">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
-            <path d="M4 15h16"></path>
-          </svg>
-        </div>
-        <span class="logo-marca__nome">BURGA RUA</span>
-      </a>
-      <a href="{% url 'home' %}" class="btn btn--secundario btn-continuar-compras">
-        Continuar Comprando
-      </a>
-    </div>
+  <!-- Topbar minimalista -->
+  <header class="carrinho-header">
+    <a href="{% url 'home' %}" class="carrinho-logo">
+      <div class="carrinho-logo__badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2">
+          <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+          <path d="M4 15h16"></path>
+          <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path>
+        </svg>
+      </div>
+      BURGA RUA
+    </a>
+    <a href="{% url 'home' %}" class="btn-voltar">
+      ← Continuar Comprando
+    </a>
   </header>
 
-  <main class="carrinho-layout">
-    <div class="carrinho-topo">
-      <div>
-        <span class="badge-rotulo">Resumo da Encomenda</span>
-        <h2>Seu Carrinho</h2>
-      </div>
-      <span class="carrinho-topo__contador" id="carrinhoPaginaContador">0 itens adicionados</span>
-    </div>
-
+  <!-- Conteúdo Principal do Carrinho -->
+  <main class="carrinho-main">
     <div class="carrinho-grid">
-      <!-- Coluna da Esquerda: Itens + Observação -->
+      
+      <!-- Coluna da Esquerda: Itens e Observações -->
       <div>
-        <section class="tabela-carrinho" id="carrinhoPaginaLista" aria-label="Itens do carrinho">
-          <!-- Renderizado dinamicamente pelo main.js -->
-        </section>
+        <div class="card-painel">
+          <span class="carrinho-tag">Resumo da Encomenda</span>
+          <h1 class="carrinho-titulo">Seu Carrinho</h1>
+          <p class="carrinho-subtitulo" id="carrinhoQtdTexto">0 item(ns) adicionado(s)</p>
 
-        <!-- Campo de Observações do Pedido -->
-        <div class="observacao-box">
-          <label for="campoObservacao">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <!-- Lista de produtos vinculada ao JavaScript local -->
+          <div id="carrinhoItensLista">
+            <div class="carrinho-vazio-aviso">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <p style="margin: 0;">O seu carrinho está vazio no momento.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-painel">
+          <label for="obsCozinha" style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
             Alguma observação para a cozinha?
           </label>
-          <textarea id="campoObservacao" placeholder="Ex: Tirar cebola, carne bem passada, enviar sachês extras de maionese..."></textarea>
-          <span class="observacao-dica">Escreva alterações ou restrições alimentares específicas.</span>
+          <textarea id="obsCozinha" class="obs-textarea" placeholder="Ex: Tirar a cebola, carne bem passada, molho à parte..."></textarea>
+          <span style="display: block; font-size: 0.8rem; color: #718096; margin-top: 6px;">
+            Escreva alterações ou restrições alimentares específicas.
+          </span>
         </div>
       </div>
 
-      <!-- Coluna da Direita: Painel Financeiro -->
-      <aside class="resumo-card" aria-label="Resumo dos valores">
-        <h3>Detalhes do Valor</h3>
-        
-        <div class="resumo-linha">
-          <span>Subtotal</span>
-          <span id="resumoSubtotal">R$ 0,00</span>
-        </div>
-        <div class="resumo-linha">
-          <span>Entrega estimada</span>
-          <span class="resumo-linha__valor-destaque" id="resumoFrete">R$ 0,00</span>
-        </div>
-        <div class="resumo-linha total">
-          <span>Total a Pagar</span>
-          <span id="resumoTotal">R$ 0,00</span>
-        </div>
+      <!-- Coluna da Direita: Detalhes do Pagamento / Resumo -->
+      <aside>
+        <div class="card-painel">
+          <h2 class="resumo-titulo">Detalhes do Valor</h2>
 
-        <a href="{% url 'checkout' %}" class="btn btn--primario btn-fechar-pedido" id="btnAvancarCheckout">
-          Avançar para o Pagamento
-        </a>
+          <div class="resumo-linha">
+            <span>Subtotal dos itens</span>
+            <strong id="carrinhoSubtotalValor">R$ 0,00</strong>
+          </div>
+
+          <div class="resumo-linha">
+            <span>Entrega estimada</span>
+            <strong id="carrinhoFreteValor">R$ 8,00</strong>
+          </div>
+
+          <div class="resumo-divisor"></div>
+
+          <div class="resumo-total">
+            <span>Total a Pagar</span>
+            <span class="resumo-total-valor" id="carrinhoTotalGeral">R$ 8,00</span>
+          </div>
+
+          <a href="{% url 'checkout' %}" class="btn-checkout">
+            Avançar para o Pagamento →
+          </a>
+        </div>
       </aside>
+
     </div>
   </main>
-
-  <div class="toast-msg" id="toastNotificacao" role="status">
-    <span id="toastTexto"></span>
-  </div>
 
   <script src="{% static 'main.js' %}"></script>
 </body>

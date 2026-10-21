@@ -1,276 +1,162 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BURGA RUA - Peça agora seus smash burgers favoritos com entrega rápida.">
-  <title>Cardápio Online | BURGA RUA Delivery</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+{% block title %}Cardápio Online | BURGA RUA Delivery{% endblock %}
 
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
-<body>
+{% block extra_head %}
+<style>
+  @keyframes pulse-verde {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(46, 125, 50, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+  }
+</style>
+{% endblock %}
 
-  <!-- Barra Superior de Avisos Operacionais -->
-  <div class="topbar">
-    <div class="container topbar__conteudo">
-      <span>Frete Grátis em pedidos acima de R$ 50</span>
-      <span>•</span>
-      <span>Tempo de espera: <strong class="topbar__destaque">30 a 45 min</strong></span>
-    </div>
-  </div>
-
-  <!-- Header da Aplicação -->
-  <header class="header-site" id="headerPrincipal">
-    <div class="container header-site__wrapper">
-      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
-        <div class="logo-marca__icone">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
-            <path d="M4 15h16"></path>
-            <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path>
-          </svg>
+{% block content %}
+<!-- Cabeçalho Informativo da Loja -->
+<section class="loja-header-status" style="padding: 32px 0 20px;">
+  <div class="container loja-info-wrapper" style="display: flex; flex-direction: column; gap: 12px;">
+    <div class="loja-perfil" style="display: flex; align-items: flex-start; gap: 16px;">
+      <div class="loja-dados">
+        <div class="status-badge-aberto" style="display: inline-flex; align-items: center; gap: 8px; background: #e8f5e9; color: #2e7d32; font-weight: 600; font-size: 0.85rem; padding: 6px 14px; border-radius: 20px; margin-bottom: 10px; width: fit-content; border: 1px solid #c8e6c9;">
+          <span class="status-ponto" style="width: 8px; height: 8px; background-color: #2e7d32; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); animation: pulse-verde 1.8s infinite;"></span>
+          Aberto Agora
         </div>
-        <span class="logo-marca__nome">BURGA RUA</span>
-      </a>
-
-      <!-- Ações do Header -->
-      <div class="header-acoes">
-        {% if user.is_authenticated %}
-          <span class="btn btn--secundario btn-continuar-compras">Olá, {{ user.first_name|default:user.username }}</span>
-          <form method="post" action="{% url 'logout' %}" style="margin:0">
-            {% csrf_token %}
-            <button type="submit" class="btn btn--secundario btn-continuar-compras">Sair</button>
-          </form>
-        {% else %}
-          <a href="{% url 'login' %}" class="btn btn--secundario btn-continuar-compras">Entrar</a>
-          <a href="{% url 'cadastro' %}" class="btn btn--primario btn-continuar-compras">Cadastrar-se</a>
-        {% endif %}
-
-        <button type="button" class="btn-carrinho-header" id="btnAbrirCarrinho" aria-label="Ver sacola">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-          <span class="carrinho-badge" id="carrinhoBadge">0</span>
-        </button>
-      </div>
-    </div>
-  </header>
-    {% if messages %}
-      <div class="container mensagens-django">
-    {% for message in messages %}
-      <div class="alerta alerta--{{ message.tags }}" role="alert">{{ message }}</div>
-    {% endfor %}
-  </div>
-  {% endif %}
-  <!-- Cabeçalho Operacional do Restaurante + Barra de Busca -->
-  <section class="loja-header-status">
-    <div class="container loja-info-wrapper">
-      
-      <div class="loja-perfil">
-        <div class="loja-avatar">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
-            <path d="M4 15h16"></path>
-          </svg>
-        </div>
-        <div class="loja-dados">
-          <div class="status-badge-aberto">
-            <span class="status-ponto"></span>
-            Aberto Agora
-          </div>
-          <h1>BURGA RUA • Smash &amp; Co.</h1>
-          <div class="loja-metas">
-            <span>★ 4.9 (2.4k avaliações)</span>
-            <span>•</span>
-            <span>Hamburgueria Artesanal</span>
-            <span>•</span>
-            <span>Pedido mín. R$ 20</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Barra de Busca Operacional (via GET no Django) -->
-      <form method="GET" action="{% url 'home' %}" class="busca-cardapio-form">
-        <input type="text" name="busca" value="{{ termo_busca }}" placeholder="Buscar no cardápio..." class="busca-cardapio-input" aria-label="Buscar produtos">
-        <button type="submit" class="btn-busca-submit" aria-label="Pesquisar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </form>
-
-    </div>
-  </section>
-
-  <main class="cardapio-app-layout">
-    <div class="container">
-
-      <!-- Pílulas de Categorias para Filtragem Rápida -->
-      <div class="categorias-trilho" role="tablist" aria-label="Filtrar por categoria">
-        <button type="button" class="categoria-pill ativo" data-categoria="todos">
-          <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"></path></svg> Todos
-        </button>
-        <button type="button" class="categoria-pill" data-categoria="burgers">
-          <svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 0 1 16 0H4zM4 15h16M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path></svg> Burgers
-        </button>
-        <button type="button" class="categoria-pill" data-categoria="batatas">
-          <svg viewBox="0 0 24 24"><path d="M5 11l2 9h10l2-9M5 11V6l4-3 3 4 3-4 4 3v5"></path></svg> Batatas
-        </button>
-        <button type="button" class="categoria-pill" data-categoria="frango">
-          <svg viewBox="0 0 24 24"><path d="M18 10a6 6 0 0 0-12 0c0 7 6 11 6 11s6-4 6-11z"></path></svg> Frango
-        </button>
-        <button type="button" class="categoria-pill" data-categoria="bebidas">
-          <svg viewBox="0 0 24 24"><path d="M7 2h10l1 9a6 6 0 0 1-12 0l1-9zM6 22h12"></path></svg> Bebidas
-        </button>
-        <button type="button" class="categoria-pill" data-categoria="sobremesas">
-          <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4zM6 14h12l-2 8H8l-2-8z"></path></svg> Sobremesas
-        </button>
-      </div>
-
-      <!-- Título de Seção Operacional -->
-      <div class="secao-cabecalho" style="margin-top: 24px;">
-        <div>
-          <h2>Cardápio Principal</h2>
-          <p>
-            {% if termo_busca %}
-              Exibindo resultados para "<strong>{{ termo_busca }}</strong>" — <a href="{% url 'home' %}">Limpar filtro</a>
-            {% else %}
-              Selecione seus itens e monte seu pedido.
-            {% endif %}
-          </p>
-        </div>
-      </div>
-
-      <!-- Grade de Produtos Dinâmica do Django -->
-      <div class="produtos-grid" id="produtosGrid">
-        {% for produto in produtos %}
-        <article class="card-produto"
-                 data-categoria="{{ produto.categoria }}"
-                 data-id="{{ produto.id }}"
-                 data-nome="{{ produto.nome }}"
-                 data-preco="{{ produto.preco_float }}">
-          <div class="card-produto__media">
-            {% if produto.badge %}
-              <span class="card-produto__badge">{{ produto.badge }}</span>
-            {% endif %}
-            <a href="{% url 'detalhe_produto' slug=produto.slug %}">
-              <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" class="card-produto__img" loading="lazy">
-            </a>
-          </div>
-          <div class="card-produto__conteudo">
-            <a href="{% url 'detalhe_produto' slug=produto.slug %}" style="text-decoration: none; color: inherit;">
-              <h3 class="card-produto__titulo">{{ produto.nome }}</h3>
-            </a>
-            <p class="card-produto__descricao">{{ produto.descricao }}</p>
-            
-            <div class="card-produto__rodape">
-              <div class="card-produto__preco"><small>R$</small>{{ produto.preco }}</div>
-              
-              <div class="card-acao-comprar">
-                <button type="button" class="btn-adicionar-produto" aria-label="Adicionar {{ produto.nome }}">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </button>
-                <div class="card-seletor-qty">
-                  <button type="button" class="btn-qty-mini btn-card-menos">-</button>
-                  <span class="qty-display-mini">1</span>
-                  <button type="button" class="btn-qty-mini btn-card-mais">+</button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </article>
-        {% empty %}
-        <div class="carrinho-vazio" style="grid-column: 1 / -1; padding: 60px 20px;">
-          <p>Nenhum produto encontrado para a sua busca.</p>
-          <a href="{% url 'home' %}" class="btn btn--primario" style="margin-top: 14px; display: inline-flex;">Ver Cardápio Completo</a>
-        </div>
-        {% endfor %}
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Rodapé Operacional e Discreto -->
-  <footer class="footer-site" style="padding: 40px 0 20px;">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-        <span class="logo-marca__nome" style="font-size: 1.1rem;">BURGA RUA Delivery</span>
-        <div class="loja-metas">
-          <span>Horário: 18h às 23h45</span>
+        <h1 style="margin: 0 0 8px; font-size: 2rem; font-weight: 800;">BURGA RUA • Smash &amp; Co.</h1>
+        <div class="loja-metas" style="color: #666; font-size: 0.95rem;">
+          <span>★ 4.9 (2.4k avaliações)</span>
           <span>•</span>
-          <span>Pix e Cartões na entrega</span>
+          <span>Hamburgueria Artesanal</span>
+          <span>•</span>
+          <span>Pedido mín. R$ 20</span>
         </div>
       </div>
-      <div class="footer-bottom" style="margin-top: 20px;">
-        <p>&copy; 2026 BURGA RUA. Sistema de Delivery desenvolvido com Django.</p>
-      </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <!-- Drawer Lateral do Carrinho (Sacola Rápida) -->
-  <div class="carrinho-overlay" id="carrinhoOverlay"></div>
-  <aside class="carrinho-drawer" id="carrinhoDrawer" aria-label="Sacola de pedidos">
-    <div class="drawer-header">
-      <h3>Sua Sacola</h3>
-      <button type="button" class="btn-fechar-drawer" id="btnFecharCarrinho" aria-label="Fechar sacola">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+<main class="cardapio-app-layout">
+  <div class="container">
+
+    <!-- Pílulas de Categorias para Filtragem Rápida -->
+    <div class="categorias-trilho" role="tablist" aria-label="Filtrar por categoria" style="margin-bottom: 28px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px;">
+      <button type="button" class="categoria-pill ativo" data-categoria="todos">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"></path></svg> Todos
+      </button>
+      <button type="button" class="categoria-pill" data-categoria="hamburgueres">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a8 8 0 0 1 16 0H4zM4 15h16M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path></svg> Burgers
+      </button>
+      <button type="button" class="categoria-pill" data-categoria="batatas">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11l2 9h10l2-9M5 11V6l4-3 3 4 3-4 4 3v5"></path></svg> Batatas
+      </button>
+      <button type="button" class="categoria-pill" data-categoria="frango">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10a6 6 0 0 0-12 0c0 7 6 11 6 11s6-4 6-11z"></path></svg> Frango
+      </button>
+      <button type="button" class="categoria-pill" data-categoria="bebidas">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2h10l1 9a6 6 0 0 1-12 0l1-9zM6 22h12"></path></svg> Bebidas
+      </button>
+      <button type="button" class="categoria-pill" data-categoria="sobremesas">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4zM6 14h12l-2 8H8l-2-8z"></path></svg> Sobremesas
       </button>
     </div>
 
-    <div class="frete-barra-wrapper">
-      <div class="frete-barra-texto">
-        <span id="freteTexto">Faltam R$ 50,00 para frete grátis</span>
-        <span id="freteStatusIcon">🛵</span>
-      </div>
-      <div class="frete-progresso">
-        <div class="frete-progresso__fill" id="freteProgressoBarra"></div>
+    <!-- Título da Seção -->
+    <div class="secao-cabecalho" style="margin-bottom: 24px;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 800; margin: 0 0 6px;">Cardápio Principal</h2>
+        <p style="color: #666; margin: 0;">Selecione seus itens e monte seu pedido.</p>
       </div>
     </div>
 
-    <div class="drawer-lista" id="drawerItensLista"></div>
+    <!-- Grade de Produtos Dinâmica -->
+    <div class="produtos-grid" id="produtosGrid">
+      {% for produto in produtos %}
+      <article class="card-produto"
+               data-categoria="{{ produto.categoria.slug|default:produto.categoria.nome|lower|slugify }}"
+               data-categoria-nome="{{ produto.categoria.nome|lower }}"
+               data-id="{{ produto.id }}"
+               data-nome="{{ produto.nome }}"
+               data-preco="{{ produto.preco_float|default:produto.preco }}">
+        <div class="card-produto__media">
+          {% if produto.badge %}
+            <span class="card-produto__badge">{{ produto.badge }}</span>
+          {% endif %}
+          <a href="{% url 'detalhe_produto' slug=produto.slug %}">
+            {% if produto.imagem %}
+              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="card-produto__img" loading="lazy">
+            {% elif produto.imagem_url %}
+              <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" class="card-produto__img" loading="lazy">
+            {% else %}
+              <div style="height: 190px; background: #eee; border-radius: 14px;"></div>
+            {% endif %}
+          </a>
+        </div>
+        <div class="card-produto__conteudo">
+          <a href="{% url 'detalhe_produto' slug=produto.slug %}" style="text-decoration: none; color: inherit;">
+            <h3 class="card-produto__titulo">{{ produto.nome }}</h3>
+          </a>
+          <p class="card-produto__descricao">{{ produto.descricao }}</p>
+          
+          <div class="card-produto__rodape">
+            <div class="card-produto__preco"><small>R$</small>{{ produto.preco }}</div>
+            
+            <div class="card-acao-comprar">
+              <button type="button" class="btn-adicionar-produto" aria-label="Adicionar {{ produto.nome }}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <div class="card-seletor-qty">
+                <button type="button" class="btn-qty-mini btn-card-menos">-</button>
+                <span class="qty-display-mini">1</span>
+                <button type="button" class="btn-qty-mini btn-card-mais">+</button>
+              </div>
+            </div>
 
-    <div class="drawer-footer">
-      <div class="drawer-total">
-        <span>Total</span>
-        <span id="carrinhoTotalValor">R$ 0,00</span>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="carrinho-vazio" style="grid-column: 1 / -1; padding: 60px 20px; text-align: center;">
+        <p>Nenhum produto cadastrado no cardápio.</p>
       </div>
-      <a href="{% url 'carrinho' %}" class="btn btn--primario btn-fechar-pedido">
-        Ver Carrinho &amp; Finalizar
-      </a>
+      {% endfor %}
     </div>
-  </aside>
 
-  <!-- Barra de Sacola Fixa no Mobile -->
-  <div class="mobile-cart-bar" id="mobileCartBar">
-    <div>
-      <span class="carrinho-topo__contador">Total na sacola:</span>
-      <strong id="mobileCartTotal">R$ 0,00</strong>
-    </div>
-    <button type="button" class="btn btn--primario" id="btnMobileVerSacola">
-      Ver Sacola (<span id="mobileCartQtd">0</span>)
-    </button>
   </div>
+</main>
+{% endblock %}
 
-  <!-- Toast de Notificação -->
-  <div class="toast-msg" id="toastNotificacao" role="status">
-    <span id="toastTexto">Item adicionado com sucesso!</span>
-  </div>
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const botoesCategoria = document.querySelectorAll('.categoria-pill');
+    const cardsProdutos = document.querySelectorAll('.card-produto');
 
-  <script src="{% static 'main.js' %}"></script>
-</body>
-</html>
+    botoesCategoria.forEach(botao => {
+      botao.addEventListener('click', function () {
+        botoesCategoria.forEach(b => b.classList.remove('ativo'));
+        this.classList.add('ativo');
+
+        const categoriaAlvo = this.getAttribute('data-categoria').toLowerCase();
+
+        cardsProdutos.forEach(card => {
+          const cardCategoriaSlug = (card.getAttribute('data-categoria') || '').toLowerCase();
+          const cardCategoriaNome = (card.getAttribute('data-categoria-nome') || '').toLowerCase();
+
+          const ehBurger = (categoriaAlvo === 'burgers' || categoriaAlvo === 'hamburgueres') &&
+                           (cardCategoriaSlug.includes('hamburguer') || cardCategoriaSlug.includes('burger') || cardCategoriaNome.includes('hamburguer') || cardCategoriaNome.includes('burger'));
+
+          if (categoriaAlvo === 'todos' || cardCategoriaSlug.includes(categoriaAlvo) || cardCategoriaNome.includes(categoriaAlvo) || ehBurger) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
