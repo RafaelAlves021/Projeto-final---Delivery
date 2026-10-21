@@ -3,14 +3,13 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-2v7jbd)!5i_+7dtni5v=9vau^+yp+1*$ynl4tyqp=lj8=1v$t&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Em desenvolvimento, aceita qualquer host (útil na rede do curso).
+# Em desenvolvimento e testes no PythonAnywhere, aceita os hosts do projeto
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'login'
@@ -45,7 +44,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'app' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,13 +105,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Arquivos enviados pelo usuário (imagens de produtos etc.)
+# Arquivos enviados pelo utilizador (imagens de produtos, etc.)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Redireciona para a página inicial ('home') logo após fazer o login com sucesso
-LOGIN_REDIRECT_URL = 'home'
-
-# Redireciona para a página inicial logo após fazer logout
-LOGOUT_REDIRECT_URL = 'home'
