@@ -1,1 +1,8 @@
 venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
+.env
+echo db.sqlite3 >> .gitignore
+git add .gitignore

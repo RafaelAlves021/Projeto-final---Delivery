@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio | BURGA RUA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+    <!-- Barra superior -->
+    <div class="topbar">
+        <div class="container topbar__conteudo">
+            <span>Entrega grátis acima de R$ 50</span>
+            <span aria-hidden="true">•</span>
+            <span>Tempo médio de entrega: <strong class="topbar__destaque">30 minutos</strong></span>
+        </div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="header-site" id="headerPrincipal">
+        <div class="container header-site__wrapper">
+            <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA - Início">
+                <div class="logo-marca__icone">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+                        <path d="M4 15h16"></path>
+                        <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path>
+                    </svg>
+                </div>
+                <span class="logo-marca__nome">BURGA RUA</span>
+            </a>
+
+            <nav aria-label="Navegação principal">
+                <ul class="nav-desktop">
+                    <li><a href="{% url 'home' %}">Início</a></li>
+                    <li><a href="{% url 'cardapio' %}" aria-current="page">Cardápio</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-acoes">
+                <button type="button" class="btn-carrinho-header" id="btnAbrirCarrinho" aria-label="Abrir carrinho">
+                    <span aria-hidden="true">🛍️</span> Carrinho
+                    <span class="carrinho-badge" id="carrinhoBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="secao-hero">
+            <div class="container hero-grid">
+                <div class="hero-conteudo">
+                    <span class="badge-rotulo">FEITO NA HORA · SABOR DE VERDADE</span>
+                    <h1>Seu próximo favorito está no nosso cardápio.</h1>
+                    <p>Smash burgers suculentos, acompanhamentos crocantes e sobremesas para fechar o pedido do jeito certo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Produtos -->
+        <section class="secao-produtos" id="produtos">
+            <div class="container">
+                <div class="secao-cabecalho">
+                    <div>
+                        <span class="badge-rotulo">ESCOLHA O SEU</span>
+                        <h2>Nosso cardápio</h2>
+                        <p>Encontre o sabor perfeito para hoje.</p>
+                    </div>
+                </div>
+
+                <!-- Busca -->
+                <div class="cardapio-busca" style="margin-bottom: 24px;">
+                    <label for="product-search" style="display: block; font-weight: 600; margin-bottom: 8px;">Buscar produto</label>
+                    <input type="search" id="product-search" placeholder="Digite o nome de um produto..." autocomplete="off" style="width: 100%; max-width: 400px; padding: 12px 16px; border-radius: 8px; border: 1px solid #E6E1D8; font-family: inherit;">
+                </div>
+
+                <!-- Filtros por categoria -->
+                <div class="categorias-trilho" id="filtrosCategorias">
+                    <button type="button" class="categoria-pill ativo" data-categoria="todas" aria-pressed="true">Todos</button>
+                    {% for categoria in categorias %}
+                        <button type="button" class="categoria-pill" data-categoria="{{ categoria.slug }}" aria-pressed="false">
+                            {{ categoria.nome }}
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <div class="secao-cabecalho" style="margin-top: 24px;">
+                    <p id="product-count" aria-live="polite">{{ produtos|length }} produto(s) encontrado(s)</p>
+                </div>
+
+                <!-- Lista de produtos -->
+                <div class="produtos-grid" id="listaProdutos">
+                    {% for produto in produtos %}
+                        <article class="card-produto" data-categoria="{{ produto.categoria.slug }}" data-nome="{{ produto.nome|lower }}">
+                            
+                            <a href="{% url 'detalhe_produto' slug=produto.slug %}" class="card-produto__link" aria-label="Ver detalhes de {{ produto.nome }}">
+                                <div class="card-produto__media">
+                                    {% if produto.imagem_url %}
+                                        <img class="card-produto__img" src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" loading="lazy">
+                                    {% elif produto.imagem %}
+                                        <img class="card-produto__img" src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" loading="lazy">
+                                    {% else %}
+                                        <div class="card-produto__img produto-sem-imagem" role="img" aria-label="Imagem não cadastrada">🍔</div>
+                                    {% endif %}
+                                    
+                                    {% if produto.preco_promocional %}
+                                        <span class="badge-rotulo">Oferta</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="card-produto__conteudo">
+                                    <span class="produto-categoria" style="font-size: 0.85rem; color: var(--cor-texto-mutado); font-weight: 600; text-transform: uppercase;">{{ produto.categoria.nome }}</span>
+                                    <h3 class="card-produto__titulo">{{ produto.nome }}</h3>
+                                    <p class="card-produto__descricao">{{ produto.descricao|default:"Uma delícia preparada especialmente para você." }}</p>
+                                </div>
+                            </a>
+
+                            <div class="card-produto__rodape">
+                                <div class="card-produto__preco">
+                                    R$ {{ produto.preco_atual|floatformat:2 }}
+                                </div>
+
+                                <button type="button" class="btn-adicionar-produto"
+                                        data-id="{{ produto.id }}"
+                                        data-nome="{{ produto.nome }}"
+                                        data-preco="{{ produto.preco_atual|stringformat:'s' }}"
+                                        data-imagem="{% if produto.imagem_url %}{{ produto.imagem_url }}{% elif produto.imagem %}{{ produto.imagem.url }}{% endif %}"
+                                        {% if not produto.disponivel %}disabled{% endif %}
+                                        aria-label="Adicionar {{ produto.nome }} ao carrinho">
+                                    + Adicionar
+                                </button>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <div class="cardapio-vazio">
+                            <h3>Estamos preparando nosso cardápio!</h3>
+                            <p>Nenhum produto cadastrado no momento.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <p id="empty-state" hidden aria-live="polite" style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--cor-destaque);">
+                    Nenhum produto encontrado para essa busca.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Carrinho Drawer -->
+    <div class="carrinho-overlay" id="carrinhoOverlay"></div>
+    <aside class="carrinho-drawer" id="carrinhoDrawer" aria-label="Carrinho de compras" aria-hidden="true">
+        <div class="drawer-header">
+            <h2>Seu carrinho</h2>
+            <button type="button" id="btnFecharCarrinho" aria-label="Fechar carrinho" class="btn-fechar-drawer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <div class="frete-barra-wrapper">
+            <p id="freteTexto" class="frete-barra-texto">Adicione produtos ao seu carrinho!</p>
+            <div class="frete-progresso">
+                <div class="freteProgressoBarra" id="freteProgressoBarra"></div>
+            </div>
+        </div>
+
+        <div class="drawer-lista" id="drawerItensLista">
+            <p>Seu carrinho está vazio.</p>
+        </div>
+
+        <div class="drawer-footer">
+            <div class="drawer-total">
+                <span>Total</span>
+                <strong id="carrinhoTotalValor">R$ 0,00</strong>
+            </div>
+            <a href="{% url 'carrinho' %}" class="btn btn--primario" style="display: block; text-align: center; width: 100%;">Ver Carrinho &amp; Finalizar</a>
+        </div>
+    </aside>
+
+    <!-- Notificação Toast -->
+    <div class="toast-msg" id="toastNotificacao" role="status" aria-live="polite">
+        <span id="toastTexto"></span>
+    </div>
+
+    <script src="{% static 'main.js' %}"></script>
+
+    <!-- Script do Filtro Corrigido -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const busca = document.getElementById("product-search");
+            const botoesCategoria = document.querySelectorAll("#filtrosCategorias .categoria-pill");
+            const cards = document.querySelectorAll(".card-produto");
+            const contador = document.getElementById("product-count");
+            const mensagemVazia = document.getElementById("empty-state");
+
+            let categoriaAtual = "todas";
+
+            function filtrarProdutos() {
+                const termo = busca ? busca.value.trim().toLocaleLowerCase("pt-BR") : "";
+                let quantidadeVisivel = 0;
+
+                cards.forEach(function (card) {
+                    const nome = (card.dataset.nome || "").toLocaleLowerCase("pt-BR");
+                    const categoria = card.dataset.categoria || "";
+
+                    const correspondeNome = nome.includes(termo);
+                    const correspondeCategoria = categoriaAtual === "todas" || categoria === categoriaAtual;
+                    const mostrar = correspondeNome && correspondeCategoria;
+
+                    // A MÁGICA ACONTECE AQUI: força display flex ou none
+                    card.style.display = mostrar ? "flex" : "none";
+
+                    if (mostrar) {
+                        quantidadeVisivel++;
+                    }
+                });
+
+                if (contador) {
+                    contador.textContent = quantidadeVisivel + (quantidadeVisivel === 1 ? " produto encontrado" : " produtos encontrados");
+                }
+
+                if (mensagemVazia) {
+                    mensagemVazia.hidden = quantidadeVisivel !== 0;
+                }
+            }
+
+            botoesCategoria.forEach(function (botao) {
+                botao.addEventListener("click", function () {
+                    categoriaAtual = botao.dataset.categoria || "todas";
+                    botoesCategoria.forEach(function (outroBotao) {
+                        outroBotao.classList.remove("ativo");
+                        outroBotao.setAttribute("aria-pressed", "false");
+                    });
+                    botao.classList.add("ativo");
+                    botao.setAttribute("aria-pressed", "true");
+                    filtrarProdutos();
+                });
+            });
+
+            if (busca) {
+                busca.addEventListener("input", filtrarProdutos);
+            }
+
+            filtrarProdutos();
+        });
+    </script>
+</body>
+</html>

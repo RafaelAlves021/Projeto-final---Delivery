@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dados de Entrega &amp; Pagamento | BURGA RUA</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header-site">
+    <div class="container header-site__wrapper">
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+            <path d="M4 15h16"></path>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+      <a href="{% url 'carrinho' %}" class="btn btn--secundario btn-continuar-compras">
+        ← Rever Sacola
+      </a>
+    </div>
+  </header>
+
+  <main class="carrinho-layout">
+    <div class="carrinho-topo">
+      <div>
+        <span class="badge-rotulo">Finalização</span>
+        <h2>Dados de Entrega</h2>
+      </div>
+      <span class="carrinho-topo__contador" id="checkoutContador">Revise os seus dados</span>
+    </div>
+
+    <form class="carrinho-grid" id="formCheckout">
+      {% csrf_token %}
+
+      <!-- Coluna da Esquerda: Formulário de Identificação e Entrega -->
+      <section class="checkout-formulario" aria-label="Formulário de encomenda">
+        
+        <!-- 1. Dados Pessoais -->
+        <div class="checkout-secao">
+          <h3>1. Identificação</h3>
+          <div class="campo-linha campo-linha--dupla">
+            <div class="campo-grupo">
+              <label for="clienteNome">Nome Completo *</label>
+              <input type="text" id="clienteNome" name="nome" class="campo-input" placeholder="Ex: Rafael Silva" required>
+            </div>
+            <div class="campo-grupo">
+              <label for="clienteTelefone">Número de Contacto / WhatsApp *</label>
+              <input type="tel" id="clienteTelefone" name="telefone" class="campo-input" placeholder="Ex: (21) 98765-4321" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Endereço / Morada -->
+        <div class="checkout-secao">
+          <h3>2. Morada de Entrega</h3>
+          <div class="campo-linha campo-linha--dupla">
+            <div class="campo-grupo">
+              <label for="clienteCep">Código Postal / CEP *</label>
+              <input type="text" id="clienteCep" name="cep" class="campo-input" placeholder="Ex: 20000-000" required>
+            </div>
+            <div class="campo-grupo">
+              <label for="clienteBairro">Bairro / Zona *</label>
+              <input type="text" id="clienteBairro" name="bairro" class="campo-input" placeholder="Ex: Centro" required>
+            </div>
+          </div>
+
+          <div class="campo-linha campo-linha--morada">
+            <div class="campo-grupo">
+              <label for="clienteRua">Rua / Avenida *</label>
+              <input type="text" id="clienteRua" name="rua" class="campo-input" placeholder="Ex: Rua das Flores" required>
+            </div>
+            <div class="campo-grupo">
+              <label for="clienteNumero">N.º *</label>
+              <input type="text" id="clienteNumero" name="numero" class="campo-input" placeholder="123" required>
+            </div>
+          </div>
+
+          <div class="campo-linha">
+            <div class="campo-grupo">
+              <label for="clienteComplemento">Complemento / Ponto de Referência</label>
+              <input type="text" id="clienteComplemento" name="complemento" class="campo-input" placeholder="Ex: Apartamento 402, Bloco B">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Pagamento -->
+        <div class="checkout-secao">
+          <h3>3. Forma de Pagamento</h3>
+          <div class="pagamento-opcoes">
+            <label class="pagamento-card">
+              <input type="radio" name="pagamento" value="pix" checked>
+              <span>Pix (Imediato)</span>
+            </label>
+            <label class="pagamento-card">
+              <input type="radio" name="pagamento" value="cartao">
+              <span>Cartão na Entrega</span>
+            </label>
+            <label class="pagamento-card">
+              <input type="radio" name="pagamento" value="dinheiro">
+              <span>Dinheiro</span>
+            </label>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Coluna da Direita: Resumo do Valor -->
+      <aside class="resumo-card" aria-label="Resumo do pedido">
+        <h3>Resumo do Pedido</h3>
+        
+        <div class="resumo-linha">
+          <span>Subtotal</span>
+          <span id="checkoutSubtotal">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha">
+          <span>Taxa de Entrega</span>
+          <span class="resumo-linha__valor-destaque" id="checkoutFrete">Grátis</span>
+        </div>
+        <div class="resumo-linha total">
+          <span>Total a Pagar</span>
+          <span id="checkoutTotal">R$ 0,00</span>
+        </div>
+
+        <button type="submit" class="btn btn--primario btn-fechar-pedido">
+          Confirmar e Fazer Pedido
+        </button>
+      </aside>
+
+    </form>
+  </main>
+
+  <script src="{% static 'main.js' %}"></script>
+</body>
+</html>

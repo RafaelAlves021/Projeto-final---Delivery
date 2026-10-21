@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu Carrinho | BURGA RUA</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="header-site">
+    <div class="container header-site__wrapper">
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+            <path d="M4 15h16"></path>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+      <a href="{% url 'home' %}" class="btn btn--secundario btn-continuar-compras">
+        Continuar Comprando
+      </a>
+    </div>
+  </header>
+
+  <main class="carrinho-layout">
+    <div class="carrinho-topo">
+      <div>
+        <span class="badge-rotulo">Resumo da Encomenda</span>
+        <h2>Seu Carrinho</h2>
+      </div>
+      <span class="carrinho-topo__contador" id="carrinhoPaginaContador">0 itens adicionados</span>
+    </div>
+
+    <div class="carrinho-grid">
+      <!-- Coluna da Esquerda: Itens + Observação -->
+      <div>
+        <section class="tabela-carrinho" id="carrinhoPaginaLista" aria-label="Itens do carrinho">
+          <!-- Renderizado dinamicamente pelo main.js -->
+        </section>
+
+        <!-- Campo de Observações do Pedido -->
+        <div class="observacao-box">
+          <label for="campoObservacao">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Alguma observação para a cozinha?
+          </label>
+          <textarea id="campoObservacao" placeholder="Ex: Tirar cebola, carne bem passada, enviar sachês extras de maionese..."></textarea>
+          <span class="observacao-dica">Escreva alterações ou restrições alimentares específicas.</span>
+        </div>
+      </div>
+
+      <!-- Coluna da Direita: Painel Financeiro -->
+      <aside class="resumo-card" aria-label="Resumo dos valores">
+        <h3>Detalhes do Valor</h3>
+        
+        <div class="resumo-linha">
+          <span>Subtotal</span>
+          <span id="resumoSubtotal">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha">
+          <span>Entrega estimada</span>
+          <span class="resumo-linha__valor-destaque" id="resumoFrete">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha total">
+          <span>Total a Pagar</span>
+          <span id="resumoTotal">R$ 0,00</span>
+        </div>
+
+        <a href="{% url 'checkout' %}" class="btn btn--primario btn-fechar-pedido" id="btnAvancarCheckout">
+          Avançar para o Pagamento
+        </a>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast-msg" id="toastNotificacao" role="status">
+    <span id="toastTexto"></span>
+  </div>
+
+  <script src="{% static 'main.js' %}"></script>
+</body>
+</html>
