@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta | BURGA RUA</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body class="pagina-auth">
+
+  <!-- Cabeçalho -->
+  <header class="header-site">
+    <div class="container header-site__wrapper">
+      <a href="{% url 'home' %}" class="logo-marca" aria-label="BURGA RUA Início">
+        <div class="logo-marca__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a8 8 0 0 1 16 0H4z"></path>
+            <path d="M4 15h16"></path>
+            <path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H4v1z"></path>
+          </svg>
+        </div>
+        <span class="logo-marca__nome">BURGA RUA</span>
+      </a>
+      <a href="{% url 'home' %}" class="btn btn--secundario btn-continuar-compras">
+        ← Voltar ao cardápio
+      </a>
+    </div>
+  </header>
+
+  <!-- Contentor Centralizado -->
+  <main class="auth-wrapper">
+    <div class="auth-card">
+      <span class="badge-rotulo">NOVO POR AQUI?</span>
+      <h1>Crie sua conta</h1>
+      <p>Leva menos de um minuto e você acompanha seus pedidos.</p>
+
+      {% if form.errors %}
+        <div class="alerta alerta--error" style="background: #FDEDEC; color: #C0392B; padding: 12px; border-radius: var(--raio-sm); margin-bottom: 18px; font-size: 0.88rem;">
+          Por favor, corrija os erros abaixo indicados.
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'cadastro' %}">
+        {% csrf_token %}
+
+        {% if form.first_name %}
+          <div class="campo-grupo">
+            <label for="{{ form.first_name.id_for_label }}">Nome</label>
+            {{ form.first_name }}
+          </div>
+        {% endif %}
+
+        {% for field in form %}
+          {% if field.name != 'first_name' %}
+            <div class="campo-grupo">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <small style="color: var(--cor-destaque); font-size: 0.8rem; display: block; margin-top: 4px;">
+                  {{ field.errors.0 }}
+                </small>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <button type="submit" class="btn btn--primario" style="width: 100%; margin-top: 14px;">
+          Criar conta
+        </button>
+      </form>
+
+      <div class="auth-rodape">
+        Já tem conta? <a href="{% url 'login' %}">Entrar</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-site" style="padding: 24px 0;">
+    <div class="container" style="text-align: center; color: var(--cor-texto-mutado); font-size: 0.85rem;">
+      <p>&copy; {% now "Y" %} BURGA RUA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

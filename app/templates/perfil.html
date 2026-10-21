@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil | BURGA RUA</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body style="padding: 50px; background: #f4f4f4; font-family: sans-serif;">
+    <div class="container" style="max-width: 500px; background: white; padding: 30px; border-radius: 8px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h1 style="color: #141211;">Editar Perfil</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green; font-weight: bold; background: #e8f5e9; padding: 10px; border-radius: 4px;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" style="background: #E63A27; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;">
+                Salvar Alterações
+            </button>
+        </form>
+        
+        <br>
+        <div style="text-align: center;">
+            <a href="{% url 'home' %}" style="color: #736F6A; text-decoration: none;">← Voltar para o cardápio</a>
+        </div>
+    </div>
+</body>
+</html>

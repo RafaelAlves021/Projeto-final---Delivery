@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
@@ -7,6 +6,13 @@ from decimal import Decimal
 class Categoria(models.Model):
     nome = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
+    descricao = models.TextField(blank=True, verbose_name="Descrição")
+    imagem = models.ImageField(
+        upload_to="categorias/",
+        null=True,
+        blank=True,
+        verbose_name="Imagem (opcional)",
+    )
     ordem_exibicao = models.PositiveIntegerField(default=0)
     ativo = models.BooleanField(default=True)
 
@@ -27,7 +33,7 @@ class Produto(models.Model):
     )
     nome = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
-    descricao = models.TextField(blank=True)
+    descricao = models.TextField(blank=True, verbose_name="Descrição")
     preco = models.DecimalField(max_digits=8, decimal_places=2)
     preco_promocional = models.DecimalField(
         max_digits=8,
@@ -65,7 +71,7 @@ class Produto(models.Model):
 
 class Ingrediente(models.Model):
     nome = models.CharField(max_length=100, unique=True)
-    descricao = models.CharField(max_length=255, blank=True)
+    descricao = models.CharField(max_length=255, blank=True, verbose_name="Descrição")
     ativo = models.BooleanField(default=True)
 
     class Meta:
@@ -79,7 +85,7 @@ class Ingrediente(models.Model):
 
 class Adicional(models.Model):
     nome = models.CharField(max_length=100, unique=True)
-    descricao = models.CharField(max_length=255, blank=True)
+    descricao = models.CharField(max_length=255, blank=True, verbose_name="Descrição")
     preco = models.DecimalField(max_digits=8, decimal_places=2)
     ativo = models.BooleanField(default=True)
 
@@ -94,7 +100,7 @@ class Adicional(models.Model):
 
 class Molho(models.Model):
     nome = models.CharField(max_length=100, unique=True)
-    descricao = models.CharField(max_length=255, blank=True)
+    descricao = models.CharField(max_length=255, blank=True, verbose_name="Descrição")
     preco = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -212,7 +218,7 @@ class Pedido(models.Model):
     )
     endereco_entrega = models.CharField(max_length=255)
     telefone_contato = models.CharField(max_length=20)
-    observacao = models.TextField(blank=True)
+    observacao = models.TextField(blank=True, verbose_name="Observação")
     subtotal = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -254,7 +260,7 @@ class ItemPedido(models.Model):
         max_digits=8,
         decimal_places=2,
     )
-    observacoes = models.CharField(max_length=255, blank=True)
+    observacoes = models.CharField(max_length=255, blank=True, verbose_name="Observações")
 
     # Cópias das escolhas feitas no momento do pedido.
     # Preservam o histórico mesmo se o cadastro mudar depois.
